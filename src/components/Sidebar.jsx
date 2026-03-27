@@ -12,41 +12,46 @@ const ff = 'Figtree, sans-serif'
 
 function ThemeSwitch() {
   const { dark, toggle } = useTheme()
+  const Icon = dark ? Moon : Sun
   return (
     <button
       onClick={toggle}
       aria-label="Toggle theme"
       style={{
         width: 52,
-        height: 26,
+        height: 28,
         borderRadius: 999,
         border: 'none',
-        background: dark ? '#444' : '#d9d9d9',
+        background: dark ? '#222' : '#777',
         position: 'relative',
         flexShrink: 0,
         transition: 'background 0.3s ease',
         padding: 0,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        paddingInline: 5,
       }}
     >
-      <Sun size={12} style={{ color: dark ? '#666' : '#fff', transition: 'color 0.3s', flexShrink: 0, zIndex: 0 }} />
-      <Moon size={12} style={{ color: dark ? '#fff' : '#aaa', transition: 'color 0.3s', flexShrink: 0, zIndex: 0 }} />
       <span
         style={{
           position: 'absolute',
           top: 3,
-          left: dark ? 27 : 3,
-          width: 20,
-          height: 20,
+          left: dark ? 25 : 3,
+          width: 22,
+          height: 22,
           borderRadius: '50%',
           background: '#fff',
           transition: 'left 0.25s ease',
-          zIndex: 1,
         }}
-      />
+      >
+        <Icon
+          size={13}
+          style={{
+            color: '#222',
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+          }}
+        />
+      </span>
     </button>
   )
 }
