@@ -7,6 +7,13 @@ export default function Cursor() {
 
   useEffect(() => {
     const cursor = cursorRef.current
+
+    // Hide on touch devices
+    if (window.matchMedia('(pointer: coarse)').matches) {
+      cursor.style.display = 'none'
+      return
+    }
+
     let x = -100, y = -100
 
     const move = (e) => {

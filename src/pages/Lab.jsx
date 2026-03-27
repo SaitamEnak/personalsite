@@ -99,13 +99,16 @@ export default function Lab() {
       </Card>
 
       {/* Now card */}
-      <Card index={1} style={{ padding: 22, background: '#111' }}>
+      <Card index={1} style={{ padding: 22 }}>
         <div style={{ display: 'flex', flexDirection: 'column', height: '100%', gap: 10 }}>
           <Tag label="Lab" />
-          <p style={{ fontFamily: ff, fontSize: 13, color: 'rgba(255,255,255,0.75)', lineHeight: 1.6, flex: 1 }}>
+          <p style={{ fontFamily: ff, fontSize: 14, fontWeight: 600, letterSpacing: '-0.2px', color: textPrimary, transition: 'color 0.3s' }}>
+            ¿Qué es el Lab?
+          </p>
+          <p style={{ fontFamily: ff, fontSize: 13, color: textSecondary, lineHeight: 1.6, flex: 1, transition: 'color 0.3s' }}>
             Experimentos, prototipos y exploraciones en diseño e interacción. Sin filtro.
           </p>
-          <ArrowUpRight size={16} style={{ color: 'rgba(255,255,255,0.55)' }} />
+          <ArrowUpRight size={16} style={{ color: textMuted }} />
         </div>
       </Card>
 
