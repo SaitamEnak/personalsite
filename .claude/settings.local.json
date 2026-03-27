@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__playwright__browser_navigate",
+      "Bash(npm create:*)",
+      "Bash(npx create-vite@latest . --template react --force)",
+      "Bash(npx --yes create-vite . --template react)",
+      "Read(//c/tmp/**)",
+      "Bash(npx create-vite@latest personal-web --template react)",
+      "Bash(cp:*)",
+      "Bash(npm install:*)",
+      "Bash(npm run:*)",
+      "Bash(gh auth:*)"
+    ]
+  }
+}
