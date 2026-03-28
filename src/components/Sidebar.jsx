@@ -1,3 +1,5 @@
+import { useState } from 'react'
+import { createPortal } from 'react-dom'
 import { ArrowUpRight, Sun, Moon } from 'lucide-react'
 import { useTheme } from '../context/ThemeContext'
 
@@ -9,6 +11,72 @@ const links = [
 ]
 
 const ff = 'Figtree, sans-serif'
+
+function Polaroid({ visible }) {
+  return createPortal(
+    <>
+      {/* Overlay — behind sidebar */}
+      <div
+        style={{
+          position: 'fixed',
+          inset: 0,
+          pointerEvents: 'none',
+          zIndex: 100,
+          opacity: visible ? 1 : 0,
+          background: 'rgba(0,0,0,0.45)',
+          transition: 'opacity 0.25s ease',
+        }}
+      />
+      {/* Polaroid — above everything */}
+      <div
+        style={{
+          position: 'fixed',
+          inset: 0,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          pointerEvents: 'none',
+          zIndex: 102,
+          opacity: visible ? 1 : 0,
+          transition: 'opacity 0.25s ease',
+        }}
+      >
+      <div
+        style={{
+          background: '#fff',
+          padding: '12px 12px 40px',
+          borderRadius: 4,
+          boxShadow: '0 24px 64px rgba(0,0,0,0.28), 0 4px 16px rgba(0,0,0,0.12)',
+          transform: 'rotate(-2deg)',
+          width: 320,
+        }}
+      >
+        {/* Image area */}
+        <div
+          style={{
+            width: '100%',
+            aspectRatio: '1/1',
+            background: 'linear-gradient(135deg, #0a1628 0%, #1a4080 60%, #2563c4 100%)',
+            borderRadius: 2,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <span style={{ fontFamily: ff, fontSize: 22, fontWeight: 700, color: '#fff', letterSpacing: '-0.5px' }}>
+            Dinocloud
+          </span>
+        </div>
+        {/* Caption */}
+        <p style={{ fontFamily: ff, fontSize: 12, color: '#888', textAlign: 'center', margin: '12px 0 0', letterSpacing: '0.02em' }}>
+          dinocloud.com
+        </p>
+      </div>
+      </div>
+    </>,
+    document.body
+  )
+}
 
 function ThemeSwitch() {
   const { dark, toggle } = useTheme()
@@ -58,6 +126,7 @@ function ThemeSwitch() {
 
 export default function Sidebar() {
   const { dark } = useTheme()
+  const [polaroidVisible, setPolaroidVisible] = useState(false)
 
   const bg = dark ? '#2e2e2e' : '#fff'
   const textPrimary = dark ? '#f0f0f0' : '#000'
@@ -77,6 +146,7 @@ export default function Sidebar() {
         gap: '32px',
         background: bg,
         transition: 'background 0.3s ease',
+        zIndex: 101,
       }}
     >
       {/* Top: Profile */}
@@ -151,6 +221,36 @@ export default function Sidebar() {
           y comportamiento humano. Con interés creciente en cómo la IA transforma
           la práctica del diseño.
         </p>
+
+        {/* Currently working at */}
+        <p
+          className="reveal"
+          style={{
+            animationDelay: '0.30s',
+            fontFamily: ff,
+            fontSize: 13,
+            fontWeight: 400,
+            color: textSecondary,
+            transition: 'color 0.3s ease',
+            margin: 0,
+          }}
+        >
+          Currently working at{' '}
+          <span
+            onMouseEnter={() => setPolaroidVisible(true)}
+            onMouseLeave={() => setPolaroidVisible(false)}
+            style={{
+              fontWeight: 600,
+              color: textPrimary,
+              borderBottom: `1px dashed ${textSecondary}`,
+              cursor: 'default',
+              transition: 'color 0.3s ease',
+            }}
+          >
+            Dinocloud
+          </span>
+        </p>
+        <Polaroid visible={polaroidVisible} />
       </div>
 
       {/* Bottom: Links */}

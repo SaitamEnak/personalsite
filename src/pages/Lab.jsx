@@ -7,7 +7,7 @@ const ff = 'Figtree, sans-serif'
 function useTokens() {
   const { dark } = useTheme()
   return {
-    cardBg: dark ? 'rgba(255,255,255,0.04)' : 'rgba(255,255,255,0.45)',
+    cardBg: dark ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.45)',
     textPrimary: dark ? '#e8e8e8' : '#111111',
     textSecondary: dark ? '#a8a8a8' : '#555555',
     textMuted: dark ? '#9a9a9a' : '#5a5a5a',

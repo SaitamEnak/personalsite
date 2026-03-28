@@ -5,7 +5,7 @@ export const articles = [
     title: 'Diseñar con IA no es lo mismo que diseñar para IA',
     date: '12 mar 2025',
     readingTime: '6 min',
-    cover: null,
+    cover: 'linear-gradient(135deg, #1a0533 0%, #7002FF 100%)',
     body: `
 Hay una confusión que se repite en conversaciones sobre el futuro del diseño: tratar "diseñar con IA" y "diseñar para IA" como si fueran lo mismo. No lo son. Y entender la diferencia importa más de lo que parece.
 
@@ -36,7 +36,7 @@ La práctica del diseño siempre estuvo definida por sus materiales y sus usuari
     title: 'Cómo documentar decisiones de diseño sin morir en el intento',
     date: '28 feb 2025',
     readingTime: '5 min',
-    cover: null,
+    cover: 'linear-gradient(135deg, #0a1628 0%, #1a4080 100%)',
     body: `
 La documentación de diseño tiene mala fama. Y en parte se la merece.
 
@@ -69,7 +69,7 @@ Un formato que funciona: una nota corta con tres campos — la decisión tomada,
     title: 'El problema con los design tokens genéricos',
     date: '10 feb 2025',
     readingTime: '4 min',
-    cover: null,
+    cover: 'linear-gradient(135deg, #1a1a0a 0%, #5a5a00 100%)',
     body: `
 Los design tokens son una de las ideas más útiles que aparecieron en el diseño de sistemas en los últimos años. La promesa es clara: un lugar único donde viven los valores de diseño, sincronizado entre código y herramientas de diseño, mantenible a escala.
 
@@ -100,7 +100,7 @@ El nombre de un token no es un detalle técnico. Es una decisión de diseño. Un
     title: 'Variables en Figma: lo que nadie te contó',
     date: '24 ene 2025',
     readingTime: '7 min',
-    cover: null,
+    cover: 'linear-gradient(135deg, #0d1a1a 0%, #006666 100%)',
     body: `
 Cuando Figma lanzó las variables, la reacción del ecosistema de diseño fue dividida. Para algunos, era la feature que faltaba para hacer design systems serios. Para otros, era una capa de complejidad innecesaria sobre algo que ya funcionaba con estilos.
 
@@ -133,7 +133,7 @@ Mi recomendación: empezar pequeño. Un modo de theming, una colección de color
     title: 'Cuando el diseño de sistemas se convierte en un fin en sí mismo',
     date: '8 ene 2025',
     readingTime: '5 min',
-    cover: null,
+    cover: 'linear-gradient(135deg, #1a0a0a 0%, #801a1a 100%)',
     body: `
 Hay un momento en el ciclo de vida de muchos design systems donde algo se tuerce. El sistema, que nació para servir a los productos, empieza a exigir que los productos lo sirvan a él.
 
@@ -164,7 +164,7 @@ Un sistema que aprende de sus excepciones crece en la dirección correcta. Uno q
     title: 'Agentes de IA y el futuro del diseñador de producto',
     date: '2 ene 2025',
     readingTime: '8 min',
-    cover: null,
+    cover: 'linear-gradient(135deg, #0a0a1a 0%, #1a1a60 100%)',
     body: `
 2024 fue el año en que los agentes de IA pasaron de ser un concepto teórico a algo que podés usar en producción. No de forma perfecta ni omnisciente, pero sí de forma suficientemente capaz como para cambiar lo que significa hacer trabajo de diseño.
 

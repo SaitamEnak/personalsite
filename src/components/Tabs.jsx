@@ -24,7 +24,16 @@ export default function Tabs({ children }) {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-      <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 16 }}>
+      <div style={{
+          display: 'flex',
+          justifyContent: 'center',
+          marginBottom: 16,
+          position: 'sticky',
+          top: 0,
+          zIndex: 10,
+          paddingTop: 8,
+          paddingBottom: 8,
+        }}>
         <div
           style={{
             position: 'relative',
@@ -33,7 +42,7 @@ export default function Tabs({ children }) {
             background: containerBg,
             border: `1px solid ${containerBorder}`,
             borderRadius: 10,
-            padding: 2,
+            padding: 4,
             transition: 'background 0.3s, border-color 0.3s',
           }}
         >
@@ -41,10 +50,10 @@ export default function Tabs({ children }) {
           <span
             style={{
               position: 'absolute',
-              top: 2,
+              top: 4,
               left: indicatorStyle.left,
               width: indicatorStyle.width,
-              height: 'calc(100% - 4px)',
+              height: 'calc(100% - 8px)',
               borderRadius: 8,
               background: indicatorBg,
               transition: 'left 0.25s cubic-bezier(0.4, 0, 0.2, 1), width 0.25s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s',
