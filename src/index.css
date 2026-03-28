@@ -92,3 +92,35 @@ body {
     min-height: 160px;
   }
 }
+
+/* Article TOC — hidden on mobile */
+.article-toc {
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .article-toc {
+    display: none;
+  }
+}
+
+/* Articles grid — 3 col desktop, 2 col tablet, 1 col mobile */
+.articles-grid {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.articles-featured {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 768px) {
+  .articles-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .articles-grid {
+    grid-template-columns: 1fr;
+  }
+}
