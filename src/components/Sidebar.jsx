@@ -41,37 +41,37 @@ function Polaroid({ visible }) {
           transition: 'opacity 0.25s ease',
         }}
       >
-      <div
-        style={{
-          background: '#fff',
-          padding: '12px 12px 40px',
-          borderRadius: 4,
-          boxShadow: '0 24px 64px rgba(0,0,0,0.28), 0 4px 16px rgba(0,0,0,0.12)',
-          transform: 'rotate(-2deg)',
-          width: 320,
-        }}
-      >
-        {/* Image area */}
         <div
           style={{
-            width: '100%',
-            aspectRatio: '1/1',
-            background: 'linear-gradient(135deg, #0a1628 0%, #1a4080 60%, #2563c4 100%)',
-            borderRadius: 2,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
+            background: '#fff',
+            padding: '12px 12px 40px',
+            borderRadius: 4,
+            boxShadow: '0 24px 64px rgba(0,0,0,0.28), 0 4px 16px rgba(0,0,0,0.12)',
+            transform: 'rotate(-2deg)',
+            width: 320,
           }}
         >
-          <span style={{ fontFamily: ff, fontSize: 22, fontWeight: 700, color: '#fff', letterSpacing: '-0.5px' }}>
-            Dinocloud
-          </span>
+          {/* Image area */}
+          <div
+            style={{
+              width: '100%',
+              aspectRatio: '1/1',
+              background: 'linear-gradient(135deg, #0a1628 0%, #1a4080 60%, #2563c4 100%)',
+              borderRadius: 2,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <span style={{ fontFamily: ff, fontSize: 22, fontWeight: 700, color: '#fff', letterSpacing: '-0.5px' }}>
+              Dinocloud
+            </span>
+          </div>
+          {/* Caption */}
+          <p style={{ fontFamily: ff, fontSize: 12, color: '#888', textAlign: 'center', margin: '12px 0 0', letterSpacing: '0.02em' }}>
+            dinocloud.com
+          </p>
         </div>
-        {/* Caption */}
-        <p style={{ fontFamily: ff, fontSize: 12, color: '#888', textAlign: 'center', margin: '12px 0 0', letterSpacing: '0.02em' }}>
-          dinocloud.com
-        </p>
-      </div>
       </div>
     </>,
     document.body
@@ -165,7 +165,7 @@ export default function Sidebar() {
             }}
           >
             <img
-              src="/profile.jpg"
+              src={`${import.meta.env.BASE_URL}avatar.png`}
               alt="Matias Cánepa"
               style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
               onError={(e) => { e.target.style.display = 'none' }}
@@ -175,20 +175,48 @@ export default function Sidebar() {
         </div>
 
         {/* Name & Title */}
-        <div className="reveal" style={{ animationDelay: '0.15s', display: 'flex', flexDirection: 'column', lineHeight: 'normal' }}>
-          <span
-            style={{
-              fontFamily: ff,
+        <div className="reveal" style={{ animationDelay: '0.15s', display: 'flex', flexDirection: 'column', lineHeight: 'normal', paddingTop: 16 }}>
+          <div style={{ display: 'flex', alignItems: 'baseline', gap: 0 }}>
+            <span
+              style={{
+                fontFamily: ff,
+                fontWeight: 700,
+                fontSize: 28,
+                letterSpacing: '-0.56px',
+                color: textPrimary,
+                whiteSpace: 'nowrap',
+                transition: 'color 0.3s ease',
+              }}
+            >
+              Matias Cánepa
+            </span>
+            {/* Inline SVG arrow — overflow:visible lets it arc above the text */}
+            <svg width="16" height="2" fill="none" style={{ overflow: 'visible', flexShrink: 0, opacity: 0.7, pointerEvents: 'none' }}>
+              <path
+                d="M -51,-19 C -45,-38 -3,-46 14,-22"
+                stroke={textSecondary} strokeWidth="1.5" strokeLinecap="round"
+              />
+              <path
+                d="M 14,-22 L 5,-23 M 14,-22 L 14,-31"
+                stroke={textSecondary} strokeWidth="1.5" strokeLinecap="round"
+              />
+            </svg>
+            <span style={{
+              fontFamily: "'Caveat', cursive",
+              fontSize: 20,
               fontWeight: 700,
-              fontSize: 28,
-              letterSpacing: '-0.56px',
-              color: textPrimary,
+              color: textSecondary,
+              letterSpacing: '0.03em',
+              lineHeight: 1,
               whiteSpace: 'nowrap',
+              transform: 'rotate(-5deg)',
+              display: 'inline-block',
               transition: 'color 0.3s ease',
-            }}
-          >
-            Matias Cánepa
-          </span>
+              color: '#8B27FB',
+            }}>
+              AKA KANE
+            </span>
+          </div>
           <span
             style={{
               fontFamily: ff,

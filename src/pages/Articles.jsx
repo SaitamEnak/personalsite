@@ -54,8 +54,8 @@ function FeaturedCard({ article, index }) {
         overflow: 'hidden',
         cursor: 'pointer',
         border: `1px solid ${border}`,
-        transition: 'transform 0.2s ease, background 0.3s ease',
-        transform: hovered ? 'translateY(-3px)' : 'translateY(0)',
+        transition: 'box-shadow 0.2s ease, background 0.3s ease',
+        boxShadow: hovered ? '0 0 0 2px #7002FF' : 'none',
         display: 'flex',
         flexDirection: isMobile ? 'column' : 'row',
       }}
@@ -66,7 +66,9 @@ function FeaturedCard({ article, index }) {
       tabIndex={0}
     >
       {/* Thumbnail con mismo aspect ratio */}
-      <div style={{ background: article.cover || 'linear-gradient(135deg, #1a1a1a 0%, #3a3a3a 100%)', aspectRatio: THUMB_RATIO, flexShrink: 0, width: isMobile ? '100%' : '45%' }} />
+      <div style={{ position: 'relative', background: article.cover || 'linear-gradient(135deg, #1a1a1a 0%, #3a3a3a 100%)', aspectRatio: THUMB_RATIO, flexShrink: 0, width: isMobile ? '100%' : '45%', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(255,255,255,0.18) 0%, transparent 55%)', opacity: hovered ? 1 : 0, transition: 'opacity 0.35s ease', pointerEvents: 'none' }} />
+      </div>
 
       {/* Content */}
       <div style={{ padding: '24px 28px', display: 'flex', flexDirection: 'column', gap: 12, justifyContent: 'center' }}>
@@ -97,8 +99,8 @@ function ArticleCard({ article, index }) {
         overflow: 'hidden',
         cursor: 'pointer',
         border: `1px solid ${border}`,
-        transition: 'transform 0.2s ease, background 0.3s ease',
-        transform: hovered ? 'translateY(-3px)' : 'translateY(0)',
+        transition: 'box-shadow 0.2s ease, background 0.3s ease',
+        boxShadow: hovered ? '0 0 0 2px #7002FF' : 'none',
         display: 'flex',
         flexDirection: 'column',
       }}
@@ -109,7 +111,9 @@ function ArticleCard({ article, index }) {
       tabIndex={0}
     >
       {/* Thumbnail con mismo aspect ratio */}
-      <div style={{ background: article.cover || 'linear-gradient(135deg, #1a1a1a 0%, #3a3a3a 100%)', aspectRatio: THUMB_RATIO, width: '100%' }} />
+      <div style={{ position: 'relative', background: article.cover || 'linear-gradient(135deg, #1a1a1a 0%, #3a3a3a 100%)', aspectRatio: THUMB_RATIO, width: '100%', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(255,255,255,0.18) 0%, transparent 55%)', opacity: hovered ? 1 : 0, transition: 'opacity 0.35s ease', pointerEvents: 'none' }} />
+      </div>
 
       {/* Content */}
       <div style={{ padding: '16px 18px 18px', display: 'flex', flexDirection: 'column', gap: 10, flex: 1 }}>
