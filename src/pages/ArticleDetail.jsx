@@ -164,7 +164,7 @@ export default function ArticleDetail() {
       <div style={{ maxWidth: 960, margin: '0 auto', display: 'flex', gap: 60, alignItems: 'flex-start' }}>
 
         {/* TOC — hidden on narrow screens via class */}
-        <div className="article-toc" style={{ position: 'sticky', top: 32, alignSelf: 'flex-start' }}>
+        <div className="article-toc reveal" style={{ animationDelay: '0.12s', position: 'sticky', top: 32, alignSelf: 'flex-start' }}>
           <TableOfContents headings={headings} activeId={activeId} textSecondary={textSecondary} textPrimary={textPrimary} />
         </div>
 

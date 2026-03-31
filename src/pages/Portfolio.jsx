@@ -63,9 +63,8 @@ function ProjectCard({ project, index, className = '' }) {
         background: project.gradient,
         position: 'relative',
         aspectRatio: '4/3',
-        transition: 'transform 0.25s ease, box-shadow 0.25s ease',
-        transform: hovered ? 'translateY(-3px)' : 'translateY(0)',
-        boxShadow: hovered ? '0 20px 60px rgba(0,0,0,0.3)' : '0 4px 20px rgba(0,0,0,0.12)',
+        transition: 'box-shadow 0.2s ease',
+        boxShadow: hovered ? '0 0 0 2px #7002FF' : 'none',
       }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
@@ -74,6 +73,8 @@ function ProjectCard({ project, index, className = '' }) {
     >
       {/* Gradient overlay */}
       <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 55%)' }} />
+      {/* Light overlay */}
+      <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(255,255,255,0.14) 0%, transparent 55%)', opacity: hovered ? 1 : 0, transition: 'opacity 0.35s ease', pointerEvents: 'none' }} />
 
       {/* Year */}
       <div style={{ position: 'absolute', top: 16, right: 16, fontFamily: ff, fontSize: 11, fontWeight: 500, color: 'rgba(255,255,255,0.4)', letterSpacing: '0.04em' }}>
