@@ -5,17 +5,23 @@ const cache = {}
 
 export async function fetchCollection(collection) {
   if (cache[collection]) return cache[collection]
+  if (!BASE_URL || !API_KEY) return []
 
-  const res = await fetch(`${BASE_URL}?collection=${collection}`, {
-    headers: { Authorization: `Bearer ${API_KEY}` },
-  })
+  try {
+    const res = await fetch(`${BASE_URL}?collection=${collection}`, {
+      headers: { Authorization: `Bearer ${API_KEY}` },
+    })
 
-  if (!res.ok) throw new Error(`CMS error: ${res.status}`)
+    if (!res.ok) return []
 
-  const json = await res.json()
-  const data = Array.isArray(json) ? json : json.data ?? []
-  cache[collection] = data
-  return data
+    const text = await res.text()
+    const json = JSON.parse(text)
+    const data = Array.isArray(json) ? json : json.data ?? []
+    cache[collection] = data
+    return data
+  } catch {
+    return []
+  }
 }
 
 export async function fetchEntry(collection, slug) {
