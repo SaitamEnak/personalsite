@@ -1,6 +1,6 @@
-import { ArrowUpRight } from 'lucide-react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useTheme } from '../context/ThemeContext'
+import { fetchCollection } from '../lib/cms'
 
 const ff = 'Figtree, sans-serif'
 const mono = "'Space Mono', monospace"
@@ -8,7 +8,7 @@ const mono = "'Space Mono', monospace"
 function useTokens() {
   const { dark } = useTheme()
   return {
-    cardBg: dark ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.45)',
+    cardBg: dark ? '#1E1724' : '#F8F9FF',
     textPrimary: dark ? '#e8e8e8' : '#111111',
     textSecondary: dark ? '#a8a8a8' : '#555555',
     textMuted: dark ? '#9a9a9a' : '#5a5a5a',
@@ -37,7 +37,7 @@ function Card({ children, thumb, className = '', index = 0 }) {
       tabIndex={0}
     >
       <div style={{ position: 'relative', width: '100%', aspectRatio: '4/3', overflow: 'hidden' }}>
-        <div style={{ width: '100%', height: '100%', background: thumb }} />
+        <div style={{ width: '100%', height: '100%', background: thumb?.startsWith('http') ? `url(${thumb}) center/cover no-repeat` : thumb }} />
         <div style={{
           position: 'absolute', inset: 0,
           background: 'linear-gradient(135deg, rgba(255,255,255,0.18) 0%, transparent 55%)',
@@ -62,50 +62,29 @@ function Tag({ label }) {
   )
 }
 
-const experiments = [
-  {
-    tag: 'Interacción',
-    title: 'Cursor magnético',
-    desc: 'Exploración de microinteracciones con campos de fuerza en elementos UI.',
-    thumb: 'linear-gradient(135deg, #1a0533 0%, #6b21a8 60%, #a855f7 100%)',
-    featured: true,
-  },
-  {
-    tag: 'Generativo',
-    title: 'Paletas desde imágenes',
-    desc: 'Extracción automática de tokens de color a partir de fotografías.',
-    thumb: 'linear-gradient(135deg, #0c1a0c 0%, #166534 60%, #4ade80 100%)',
-  },
-  {
-    tag: 'Tipografía',
-    title: 'Variable font playground',
-    desc: 'Exploración de ejes tipográficos variables en tiempo real.',
-    thumb: 'linear-gradient(135deg, #1c1000 0%, #92400e 60%, #fbbf24 100%)',
-  },
-  {
-    tag: 'IA',
-    title: 'Prompt to component',
-    desc: 'Generación de componentes Figma desde lenguaje natural.',
-    thumb: 'linear-gradient(135deg, #001a33 0%, #1e40af 60%, #60a5fa 100%)',
-  },
-  {
-    tag: 'Motion',
-    title: 'Transiciones de layout',
-    desc: 'Patrones de animación para cambios de estado en grids.',
-    thumb: 'linear-gradient(135deg, #1a0a0a 0%, #991b1b 60%, #f87171 100%)',
-  },
-]
-
 export default function Lab() {
-  const { textPrimary } = useTokens()
+  const { textPrimary, textMuted } = useTokens()
+  const [experiments, setExperiments] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    fetchCollection('lab')
+      .then(setExperiments)
+      .finally(() => setLoading(false))
+  }, [])
+
+  if (loading) return (
+    <div style={{ textAlign: 'center', padding: 48, fontFamily: mono, fontSize: 12, color: textMuted }}>
+      Cargando...
+    </div>
+  )
 
   return (
     <div className="grid-bento" style={{ gap: 12, maxWidth: 760, margin: '0 auto' }}>
-
       {experiments.map((e, i) => (
-        <Card key={e.title} index={i} thumb={e.thumb}>
+        <Card key={e.slug ?? e.title} index={i} thumb={e.thumb}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            <Tag label="EXP 00" />
+            <Tag label={e.label ?? 'EXP 00'} />
             <p style={{ fontFamily: mono, fontSize: 16, fontWeight: 400, color: textPrimary, lineHeight: 1.3, transition: 'color 0.3s', margin: 0, textTransform: 'uppercase' }}>{e.title}</p>
           </div>
         </Card>

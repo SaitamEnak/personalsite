@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { ArrowLeft } from 'lucide-react'
 import { useTheme } from '../context/ThemeContext'
-import { getArticle, articles } from '../data/articles'
+import { getArticle, articles as fallbackArticles } from '../data/articles'
+import { fetchEntry, fetchCollection } from '../lib/cms'
 
 const ff = 'Figtree, sans-serif'
 
@@ -89,8 +90,13 @@ export default function ArticleDetail() {
   const navigate = useNavigate()
   const { dark } = useTheme()
   const [activeId, setActiveId] = useState(null)
+  const [article, setArticle] = useState(() => getArticle(slug))
+  const [allArticles, setAllArticles] = useState(fallbackArticles)
 
-  const article = getArticle(slug)
+  useEffect(() => {
+    fetchEntry('articles', slug).then(data => { if (data) setArticle(data) })
+    fetchCollection('articles').then(data => { if (data.length > 0) setAllArticles(data) })
+  }, [slug])
 
   const bg = dark ? '#0d0d0d' : '#FAFAFA'
   const textPrimary = dark ? '#f0f0f0' : '#111111'
@@ -190,11 +196,13 @@ export default function ArticleDetail() {
             className="reveal"
             style={{
               animationDelay: '0.16s',
-              height: 280,
+              aspectRatio: '4/3',
               borderRadius: 16,
-              background: article.cover || (dark
-                ? 'linear-gradient(135deg, #1a1a1a 0%, #333 100%)'
-                : 'linear-gradient(135deg, #d0d0d0 0%, #e8e8e8 100%)'),
+              background: article.cover?.startsWith('http')
+                ? `url(${article.cover}) center/cover no-repeat`
+                : article.cover || (dark
+                  ? 'linear-gradient(135deg, #1a1a1a 0%, #333 100%)'
+                  : 'linear-gradient(135deg, #d0d0d0 0%, #e8e8e8 100%)'),
               marginBottom: 48,
               transition: 'background 0.3s',
             }}
@@ -229,13 +237,13 @@ export default function ArticleDetail() {
       </div>
 
       {/* More articles */}
-      <MoreArticles currentSlug={slug} textPrimary={textPrimary} textSecondary={textSecondary} tagBg={tagBg} tagColor={tagColor} />
+      <MoreArticles articles={allArticles} currentSlug={slug} textPrimary={textPrimary} textSecondary={textSecondary} tagBg={tagBg} tagColor={tagColor} />
 
     </div>
   )
 }
 
-function MoreArticles({ currentSlug, textPrimary, textSecondary, tagBg, tagColor }) {
+function MoreArticles({ articles, currentSlug, textPrimary, textSecondary, tagBg, tagColor }) {
   const navigate = useNavigate()
   const { dark } = useTheme()
   const others = articles.filter(a => a.slug !== currentSlug).slice(0, 3)
@@ -277,7 +285,7 @@ function MoreCard({ article, index, navigate, textPrimary, textSecondary, tagBg,
         flexDirection: 'column',
       }}
     >
-      <div style={{ background: article.cover || 'linear-gradient(135deg, #1a1a1a 0%, #3a3a3a 100%)', aspectRatio: '4/3', width: '100%' }} />
+      <div style={{ background: article.cover?.startsWith('http') ? `url(${article.cover}) center/cover no-repeat` : (article.cover || 'linear-gradient(135deg, #1a1a1a 0%, #3a3a3a 100%)'), aspectRatio: '4/3', width: '100%' }} />
       <div style={{ padding: '14px 16px 16px', display: 'flex', flexDirection: 'column', gap: 8 }}>
         <span style={{ fontFamily: ff, fontSize: 10, fontWeight: 600, letterSpacing: '0.07em', textTransform: 'uppercase', color: tagColor, background: tagBg, borderRadius: 5, padding: '3px 7px', display: 'inline-block', alignSelf: 'flex-start', transition: 'background 0.3s, color 0.3s' }}>
           {article.tag}

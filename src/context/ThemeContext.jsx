@@ -6,7 +6,7 @@ export function ThemeProvider({ children }) {
   const [dark, setDark] = useState(() => localStorage.getItem('theme') === 'dark')
 
   useEffect(() => {
-    document.body.style.background = dark ? '#0d0d0d' : '#B8B8B8'
+    document.body.style.background = dark ? '#0C0014' : '#C8C7CC'
     document.body.style.transition = 'background 0.3s ease'
     localStorage.setItem('theme', dark ? 'dark' : 'light')
   }, [dark])

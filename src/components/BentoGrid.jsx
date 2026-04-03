@@ -8,7 +8,7 @@ function useTokens() {
   const { dark } = useTheme()
   return {
     dark,
-    cardBg: dark ? 'rgba(255,255,255,0.04)' : 'rgba(255,255,255,0.45)',
+    cardBg: dark ? '#1E1724' : '#F8F9FF',
     textPrimary: dark ? '#e8e8e8' : '#0a0010',
     textSecondary: dark ? '#666' : '#888',
     textMuted: dark ? '#444' : '#bbb',
