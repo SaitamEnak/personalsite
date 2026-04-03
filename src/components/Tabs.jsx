@@ -17,23 +17,23 @@ export default function Tabs({ children }) {
     }
   }, [active])
 
-  const containerBg = dark ? '#161616' : '#aaaaaa'
-  const containerBorder = dark ? '#9d9d9d' : 'transparent'
+  const containerBg = dark ? '#242027' : '#aaaaaa'
+  const containerBorder = 'transparent'
   const indicatorBg = dark ? 'rgba(255,255,255,0.32)' : 'rgba(255,255,255,0.6)'
   const textColor = dark ? '#dadada' : '#1a1a1a'
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       <div style={{
-          display: 'flex',
-          justifyContent: 'center',
-          marginBottom: 16,
-          position: 'sticky',
-          top: 0,
-          zIndex: 10,
-          paddingTop: 8,
-          paddingBottom: 8,
-        }}>
+        display: 'flex',
+        justifyContent: 'center',
+        marginBottom: 16,
+        position: 'sticky',
+        top: 0,
+        zIndex: 10,
+        paddingTop: 8,
+        paddingBottom: 8,
+      }}>
         <div
           style={{
             position: 'relative',

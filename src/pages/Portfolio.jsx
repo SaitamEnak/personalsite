@@ -1,6 +1,7 @@
 import { ArrowUpRight } from 'lucide-react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useTheme } from '../context/ThemeContext'
+import { fetchCollection } from '../lib/cms'
 
 const ff = 'Figtree, sans-serif'
 
@@ -115,7 +116,15 @@ function ProjectCard({ project, index, className = '' }) {
 }
 
 export default function Portfolio() {
-  const [featured, ...rest] = projects
+  const [allProjects, setAllProjects] = useState(projects)
+
+  useEffect(() => {
+    fetchCollection('portfolio').then(data => {
+      if (data.length > 0) setAllProjects(data)
+    })
+  }, [])
+
+  const [featured, ...rest] = allProjects
 
   return (
     <div className="grid-bento" style={{ gap: 12, maxWidth: 760, margin: '0 auto', gridAutoRows: 'auto' }}>

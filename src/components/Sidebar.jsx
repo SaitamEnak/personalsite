@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { ArrowUpRight, Sun, Moon } from 'lucide-react'
 import { useTheme } from '../context/ThemeContext'
@@ -13,6 +13,24 @@ const links = [
 const ff = 'Figtree, sans-serif'
 
 function Polaroid({ visible }) {
+  const [show, setShow] = useState(false)
+  const [leaving, setLeaving] = useState(false)
+  const [enterKey, setEnterKey] = useState(0)
+
+  useEffect(() => {
+    if (visible) {
+      setLeaving(false)
+      setShow(true)
+      setEnterKey(k => k + 1)
+    } else if (show) {
+      setLeaving(true)
+      const t = setTimeout(() => setShow(false), 400)
+      return () => clearTimeout(t)
+    }
+  }, [visible])
+
+  if (!show) return null
+
   return createPortal(
     <>
       {/* Overlay — behind sidebar */}
@@ -22,9 +40,9 @@ function Polaroid({ visible }) {
           inset: 0,
           pointerEvents: 'none',
           zIndex: 100,
-          opacity: visible ? 1 : 0,
+          opacity: leaving ? 0 : 1,
           background: 'rgba(0,0,0,0.45)',
-          transition: 'opacity 0.25s ease',
+          transition: 'opacity 0.3s ease',
         }}
       />
       {/* Polaroid — above everything */}
@@ -37,17 +55,16 @@ function Polaroid({ visible }) {
           justifyContent: 'center',
           pointerEvents: 'none',
           zIndex: 102,
-          opacity: visible ? 1 : 0,
-          transition: 'opacity 0.25s ease',
         }}
       >
         <div
+          key={leaving ? undefined : enterKey}
+          className={leaving ? 'polaroid-exit' : 'polaroid-enter'}
           style={{
             background: '#fff',
             padding: '12px 12px 40px',
             borderRadius: 4,
             boxShadow: '0 24px 64px rgba(0,0,0,0.28), 0 4px 16px rgba(0,0,0,0.12)',
-            transform: 'rotate(-2deg)',
             width: 320,
           }}
         >
@@ -90,7 +107,7 @@ function ThemeSwitch() {
         height: 28,
         borderRadius: 999,
         border: 'none',
-        background: dark ? '#222' : '#777',
+        background: dark ? '#3D3545' : '#777',
         position: 'relative',
         flexShrink: 0,
         transition: 'background 0.3s ease',
@@ -101,7 +118,7 @@ function ThemeSwitch() {
         style={{
           position: 'absolute',
           top: 3,
-          left: dark ? 25 : 3,
+          left: dark ? 27 : 3,
           width: 22,
           height: 22,
           borderRadius: '50%',
@@ -128,7 +145,7 @@ export default function Sidebar() {
   const { dark } = useTheme()
   const [polaroidVisible, setPolaroidVisible] = useState(false)
 
-  const bg = dark ? '#2e2e2e' : '#fff'
+  const bg = dark ? '#242027' : '#F8F9FF'
   const textPrimary = dark ? '#f0f0f0' : '#000'
   const textSecondary = dark ? '#a8a8a8' : '#606060' /* dark: 4.7:1 on #2e2e2e ✓ | light: 5.7:1 on #fff ✓ */
   const divider = dark ? 'rgba(255,255,255,0.12)' : '#d9d9d9'
@@ -283,9 +300,9 @@ export default function Sidebar() {
 
       {/* Bottom: Links */}
       <div className="reveal" style={{ animationDelay: '0.35s', display: 'flex', flexDirection: 'column' }}>
-        {links.map((link) => (
+        {links.map((link, i) => (
           <div key={link.label}>
-            <div style={{ height: 1, background: divider, width: '100%', transition: 'background 0.3s ease' }} />
+            {i > 0 && <div style={{ height: 1, background: divider, width: '100%', transition: 'background 0.3s ease' }} />}
             <a
               href={link.href}
               target="_blank"
@@ -331,7 +348,6 @@ export default function Sidebar() {
             </a>
           </div>
         ))}
-        <div style={{ height: 1, background: divider, width: '100%', transition: 'background 0.3s ease' }} />
       </div>
     </aside>
   )

@@ -1,7 +1,8 @@
 import { useState, useMemo, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTheme } from '../context/ThemeContext'
-import { articles } from '../data/articles'
+import { articles as fallbackArticles } from '../data/articles'
+import { fetchCollection } from '../lib/cms'
 
 const ff = 'Figtree, sans-serif'
 const THUMB_RATIO = '4 / 3' // aspect ratio compartido entre cards normales y featured
@@ -9,7 +10,7 @@ const THUMB_RATIO = '4 / 3' // aspect ratio compartido entre cards normales y fe
 function useTokens() {
   const { dark } = useTheme()
   return {
-    cardBg: dark ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.45)',
+    cardBg: dark ? '#1E1724' : '#F8F9FF',
     textPrimary: dark ? '#e8e8e8' : '#111111',
     textMuted: dark ? '#9a9a9a' : '#5a5a5a',
     tagBg: dark ? 'rgba(255,255,255,0.1)' : '#e8e8e8',
@@ -66,7 +67,7 @@ function FeaturedCard({ article, index }) {
       tabIndex={0}
     >
       {/* Thumbnail con mismo aspect ratio */}
-      <div style={{ position: 'relative', background: article.cover || 'linear-gradient(135deg, #1a1a1a 0%, #3a3a3a 100%)', aspectRatio: THUMB_RATIO, flexShrink: 0, width: isMobile ? '100%' : '45%', overflow: 'hidden' }}>
+      <div style={{ position: 'relative', background: article.cover?.startsWith('http') ? `url(${article.cover}) center/cover no-repeat` : (article.cover || 'linear-gradient(135deg, #1a1a1a 0%, #3a3a3a 100%)'), aspectRatio: THUMB_RATIO, flexShrink: 0, width: isMobile ? '100%' : '45%', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(255,255,255,0.18) 0%, transparent 55%)', opacity: hovered ? 1 : 0, transition: 'opacity 0.35s ease', pointerEvents: 'none' }} />
       </div>
 
@@ -111,7 +112,7 @@ function ArticleCard({ article, index }) {
       tabIndex={0}
     >
       {/* Thumbnail con mismo aspect ratio */}
-      <div style={{ position: 'relative', background: article.cover || 'linear-gradient(135deg, #1a1a1a 0%, #3a3a3a 100%)', aspectRatio: THUMB_RATIO, width: '100%', overflow: 'hidden' }}>
+      <div style={{ position: 'relative', background: article.cover?.startsWith('http') ? `url(${article.cover}) center/cover no-repeat` : (article.cover || 'linear-gradient(135deg, #1a1a1a 0%, #3a3a3a 100%)'), aspectRatio: THUMB_RATIO, width: '100%', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(255,255,255,0.18) 0%, transparent 55%)', opacity: hovered ? 1 : 0, transition: 'opacity 0.35s ease', pointerEvents: 'none' }} />
       </div>
 
@@ -167,12 +168,19 @@ function FilterBar({ tags, active, onChange }) {
 
 export default function Articles() {
   const [activeTag, setActiveTag] = useState('Todos')
+  const [articles, setArticles] = useState(fallbackArticles)
 
-  const tags = useMemo(() => [...new Set(articles.map(a => a.tag))], [])
+  useEffect(() => {
+    fetchCollection('articles').then(data => {
+      if (data.length > 0) setArticles(data)
+    })
+  }, [])
+
+  const tags = useMemo(() => [...new Set(articles.map(a => a.tag))], [articles])
 
   const filtered = useMemo(() =>
     activeTag === 'Todos' ? articles : articles.filter(a => a.tag === activeTag),
-    [activeTag]
+    [activeTag, articles]
   )
 
   const [featured, ...rest] = filtered
