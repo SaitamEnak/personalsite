@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { createPortal } from 'react-dom'
 import { ArrowUpRight, Sun, Moon } from 'lucide-react'
 import { useTheme } from '../context/ThemeContext'
@@ -13,39 +13,21 @@ const links = [
 const ff = 'Figtree, sans-serif'
 
 function Polaroid({ visible }) {
-  const [show, setShow] = useState(false)
-  const [leaving, setLeaving] = useState(false)
-  const [enterKey, setEnterKey] = useState(0)
-
-  useEffect(() => {
-    if (visible) {
-      setLeaving(false)
-      setShow(true)
-      setEnterKey(k => k + 1)
-    } else if (show) {
-      setLeaving(true)
-      const t = setTimeout(() => setShow(false), 400)
-      return () => clearTimeout(t)
-    }
-  }, [visible])
-
-  if (!show) return null
-
   return createPortal(
     <>
-      {/* Overlay — behind sidebar */}
+      {/* Overlay */}
       <div
         style={{
           position: 'fixed',
           inset: 0,
           pointerEvents: 'none',
           zIndex: 100,
-          opacity: leaving ? 0 : 1,
+          opacity: visible ? 1 : 0,
           background: 'rgba(0,0,0,0.45)',
-          transition: 'opacity 0.3s ease',
+          transition: 'opacity 0.4s ease',
         }}
       />
-      {/* Polaroid — above everything */}
+      {/* Polaroid */}
       <div
         style={{
           position: 'fixed',
@@ -58,9 +40,11 @@ function Polaroid({ visible }) {
         }}
       >
         <div
-          key={leaving ? undefined : enterKey}
-          className={leaving ? 'polaroid-exit' : 'polaroid-enter'}
           style={{
+            translate: visible ? '0 0' : '0 110vh',
+            rotate: visible ? '-2deg' : '18deg',
+            opacity: visible ? 1 : 0,
+            transition: 'translate 0.5s cubic-bezier(0.34, 1.4, 0.64, 1), rotate 0.5s cubic-bezier(0.34, 1.4, 0.64, 1), opacity 0.3s ease',
             background: '#fff',
             padding: '12px 12px 40px',
             borderRadius: 4,
