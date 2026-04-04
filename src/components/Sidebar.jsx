@@ -1,51 +1,34 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { createPortal } from 'react-dom'
-import { ArrowUpRight, Sun, Moon } from 'lucide-react'
+import { Sun, Moon } from 'lucide-react'
+import { FaLinkedinIn, FaDribbble, FaBehance, FaEnvelope } from 'react-icons/fa'
 import { useTheme } from '../context/ThemeContext'
 
-const links = [
-  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/mcanepadcv' },
-  { label: 'Dribbble', href: 'https://dribbble.com/Kanematias' },
-  { label: 'Behance', href: 'https://www.behance.net/MatiasCanepa' },
-  { label: 'Email', href: 'mailto:matiascanepadcv@gmail.com' },
-]
+const TABS = ['Articles', 'Portfolio', 'Lab']
 
 const ff = 'Figtree, sans-serif'
 
+const socialLinks = [
+  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/mcanepadcv', Icon: FaLinkedinIn },
+  { label: 'Dribbble', href: 'https://dribbble.com/Kanematias', Icon: FaDribbble },
+  { label: 'Behance', href: 'https://www.behance.net/MatiasCanepa', Icon: FaBehance },
+  { label: 'Email', href: 'mailto:matiascanepadcv@gmail.com', Icon: FaEnvelope },
+]
+
 function Polaroid({ visible }) {
-  const [show, setShow] = useState(false)
-  const [leaving, setLeaving] = useState(false)
-  const [enterKey, setEnterKey] = useState(0)
-
-  useEffect(() => {
-    if (visible) {
-      setLeaving(false)
-      setShow(true)
-      setEnterKey(k => k + 1)
-    } else if (show) {
-      setLeaving(true)
-      const t = setTimeout(() => setShow(false), 400)
-      return () => clearTimeout(t)
-    }
-  }, [visible])
-
-  if (!show) return null
-
   return createPortal(
     <>
-      {/* Overlay — behind sidebar */}
       <div
         style={{
           position: 'fixed',
           inset: 0,
           pointerEvents: 'none',
           zIndex: 100,
-          opacity: leaving ? 0 : 1,
+          opacity: visible ? 1 : 0,
           background: 'rgba(0,0,0,0.45)',
-          transition: 'opacity 0.3s ease',
+          transition: 'opacity 0.4s ease',
         }}
       />
-      {/* Polaroid — above everything */}
       <div
         style={{
           position: 'fixed',
@@ -58,9 +41,11 @@ function Polaroid({ visible }) {
         }}
       >
         <div
-          key={leaving ? undefined : enterKey}
-          className={leaving ? 'polaroid-exit' : 'polaroid-enter'}
           style={{
+            translate: visible ? '0 0' : '0 110vh',
+            rotate: visible ? '-2deg' : '18deg',
+            opacity: visible ? 1 : 0,
+            transition: 'translate 0.5s cubic-bezier(0.34, 1.4, 0.64, 1), rotate 0.5s cubic-bezier(0.34, 1.4, 0.64, 1), opacity 0.3s ease',
             background: '#fff',
             padding: '12px 12px 40px',
             borderRadius: 4,
@@ -68,7 +53,6 @@ function Polaroid({ visible }) {
             width: 320,
           }}
         >
-          {/* Image area */}
           <div
             style={{
               width: '100%',
@@ -84,7 +68,6 @@ function Polaroid({ visible }) {
               Dinocloud
             </span>
           </div>
-          {/* Caption */}
           <p style={{ fontFamily: ff, fontSize: 12, color: '#888', textAlign: 'center', margin: '12px 0 0', letterSpacing: '0.02em' }}>
             dinocloud.com
           </p>
@@ -141,16 +124,17 @@ function ThemeSwitch() {
   )
 }
 
-export default function Sidebar() {
+export default function Sidebar({ active, setActive }) {
   const { dark } = useTheme()
   const [polaroidVisible, setPolaroidVisible] = useState(false)
 
   const bg = dark ? '#242027' : '#F8F9FF'
   const textPrimary = dark ? '#f0f0f0' : '#000'
-  const textSecondary = dark ? '#a8a8a8' : '#606060' /* dark: 4.7:1 on #2e2e2e ✓ | light: 5.7:1 on #fff ✓ */
+  const textSecondary = dark ? '#a8a8a8' : '#606060'
   const divider = dark ? 'rgba(255,255,255,0.12)' : '#d9d9d9'
   const hoverBg = dark ? 'rgba(255,255,255,0.06)' : '#ebebeb'
   const hoverColor = dark ? '#fff' : '#000'
+  const activeBg = dark ? 'rgba(255,255,255,0.08)' : '#e4e4f0'
 
   return (
     <aside
@@ -166,161 +150,77 @@ export default function Sidebar() {
         zIndex: 101,
       }}
     >
-      {/* Top: Profile */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-
-        {/* Avatar row + switch */}
-        <div className="reveal" style={{ animationDelay: '0.05s', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-          <div
-            style={{
-              width: 90,
-              height: 90,
-              borderRadius: '50%',
-              background: dark ? '#333' : '#d9d9d9',
-              overflow: 'hidden',
-              flexShrink: 0,
-            }}
-          >
-            <img
-              src={`${import.meta.env.BASE_URL}avatar.png`}
-              alt="Matias Cánepa"
-              style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-              onError={(e) => { e.target.style.display = 'none' }}
-            />
-          </div>
-          <ThemeSwitch />
-        </div>
-
-        {/* Name & Title */}
-        <div className="reveal" style={{ animationDelay: '0.15s', display: 'flex', flexDirection: 'column', lineHeight: 'normal', paddingTop: 16 }}>
-          <div style={{ display: 'flex', alignItems: 'baseline', gap: 0 }}>
-            <span
-              style={{
-                fontFamily: ff,
-                fontWeight: 700,
-                fontSize: 28,
-                letterSpacing: '-0.56px',
-                color: textPrimary,
-                whiteSpace: 'nowrap',
-                transition: 'color 0.3s ease',
-              }}
-            >
-              Matias Cánepa
-            </span>
-            {/* Inline SVG arrow — overflow:visible lets it arc above the text */}
-            <svg width="16" height="2" fill="none" style={{ overflow: 'visible', flexShrink: 0, opacity: 0.7, pointerEvents: 'none' }}>
-              <path
-                d="M -51,-19 C -45,-38 -3,-46 14,-22"
-                stroke={textSecondary} strokeWidth="1.5" strokeLinecap="round"
-              />
-              <path
-                d="M 14,-22 L 5,-23 M 14,-22 L 14,-31"
-                stroke={textSecondary} strokeWidth="1.5" strokeLinecap="round"
-              />
-            </svg>
-            <span style={{
-              fontFamily: "'Caveat', cursive",
-              fontSize: 20,
-              fontWeight: 700,
-              color: textSecondary,
-              letterSpacing: '0.03em',
-              lineHeight: 1,
-              whiteSpace: 'nowrap',
-              transform: 'rotate(-5deg)',
-              display: 'inline-block',
-              transition: 'color 0.3s ease',
-              color: '#8B27FB',
-            }}>
-              AKA KANE
-            </span>
-          </div>
-          <span
-            style={{
-              fontFamily: ff,
-              fontWeight: 500,
-              fontSize: 18,
-              letterSpacing: '-0.36px',
-              color: textPrimary,
-              transition: 'color 0.3s ease',
-            }}
-          >
-            Product Designer
-          </span>
-        </div>
-
-        {/* Bio */}
-        <p
-          className="reveal"
-          style={{
-            animationDelay: '0.25s',
-            fontFamily: ff,
-            fontWeight: 400,
-            fontSize: 15,
-            letterSpacing: '-0.3px',
-            lineHeight: 1.5,
-            color: textSecondary,
-            transition: 'color 0.3s ease',
-          }}
-        >
-          Product Designer. Trabajo en la intersección entre sistemas, interfaces
-          y comportamiento humano. Con interés creciente en cómo la IA transforma
-          la práctica del diseño.
-        </p>
-
-        {/* Currently working at */}
-        <p
-          className="reveal"
-          style={{
-            animationDelay: '0.30s',
-            fontFamily: ff,
-            fontSize: 13,
-            fontWeight: 400,
-            color: textSecondary,
-            transition: 'color 0.3s ease',
-            margin: 0,
-          }}
-        >
-          Currently working at{' '}
-          <span
-            onMouseEnter={() => setPolaroidVisible(true)}
-            onMouseLeave={() => setPolaroidVisible(false)}
-            style={{
-              fontWeight: 600,
-              color: textPrimary,
-              borderBottom: `1px dashed ${textSecondary}`,
-              cursor: 'default',
-              transition: 'color 0.3s ease',
-            }}
-          >
-            Dinocloud
-          </span>
-        </p>
-        <Polaroid visible={polaroidVisible} />
-      </div>
-
-      {/* Bottom: Links */}
-      <div className="reveal" style={{ animationDelay: '0.35s', display: 'flex', flexDirection: 'column' }}>
-        {links.map((link, i) => (
-          <div key={link.label}>
-            {i > 0 && <div style={{ height: 1, background: divider, width: '100%', transition: 'background 0.3s ease' }} />}
-            <a
-              href={link.href}
-              target="_blank"
-              rel="noopener noreferrer"
+      {/* Top: Nav */}
+      <div className="reveal" style={{ animationDelay: '0.05s', display: 'flex', flexDirection: 'column' }}>
+        {TABS.map((tab) => {
+          const i = TABS.indexOf(tab)
+          const isActive = active === i
+          return (
+            <button
+              key={tab}
+              onClick={() => setActive(i)}
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: 10,
-                paddingTop: 16,
-                paddingBottom: 16,
+                paddingTop: 14,
+                paddingBottom: 14,
                 paddingLeft: 12,
                 paddingRight: 12,
                 marginLeft: -12,
                 marginRight: -12,
                 borderRadius: 8,
-                textDecoration: 'none',
+                border: 'none',
+                background: isActive ? activeBg : 'transparent',
+                fontFamily: ff,
+                fontWeight: isActive ? 600 : 400,
+                fontSize: 40,
+                letterSpacing: '-0.8px',
+                color: isActive ? textPrimary : textSecondary,
+                transition: 'background 0.15s, color 0.15s',
+                textAlign: 'left',
+                cursor: 'pointer',
+              }}
+              onMouseEnter={(e) => {
+                if (!isActive) {
+                  e.currentTarget.style.background = hoverBg
+                  e.currentTarget.style.color = hoverColor
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (!isActive) {
+                  e.currentTarget.style.background = 'transparent'
+                  e.currentTarget.style.color = textSecondary
+                }
+              }}
+            >
+              {tab}
+            </button>
+          )
+        })}
+      </div>
+
+      {/* Bottom: Social + Profile */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+
+        {/* Social icons */}
+        <div className="reveal" style={{ animationDelay: '0.15s', display: 'flex', justifyContent: 'space-between' }}>
+          {socialLinks.map(({ label, href, Icon }) => (
+            <a
+              key={label}
+              href={href}
+              target={href.startsWith('mailto') ? undefined : '_blank'}
+              rel="noopener noreferrer"
+              aria-label={label}
+              style={{
+                flex: 1,
+                height: 44,
+                borderRadius: 8,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
                 color: textSecondary,
                 transition: 'background 0.15s, color 0.15s',
+                textDecoration: 'none',
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.background = hoverBg
@@ -331,23 +231,53 @@ export default function Sidebar() {
                 e.currentTarget.style.color = textSecondary
               }}
             >
-              <span
-                style={{
-                  flex: 1,
-                  fontFamily: ff,
-                  fontWeight: 400,
-                  fontSize: 15,
-                  letterSpacing: '-0.3px',
-                  lineHeight: 1.4,
-                  color: 'inherit',
-                }}
-              >
-                {link.label}
-              </span>
-              <ArrowUpRight size={20} style={{ flexShrink: 0, color: 'inherit' }} />
+              <Icon size={20} />
             </a>
+          ))}
+        </div>
+
+        <div style={{ height: 1, background: divider, transition: 'background 0.3s ease' }} />
+
+        {/* Profile */}
+        <div className="reveal" style={{ animationDelay: '0.20s', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <div
+              style={{
+                width: 40,
+                height: 40,
+                borderRadius: '50%',
+                background: dark ? '#333' : '#d9d9d9',
+                overflow: 'hidden',
+                flexShrink: 0,
+              }}
+            >
+              <img
+                src={`${import.meta.env.BASE_URL}avatar.png`}
+                alt="Matias Cánepa"
+                style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                onError={(e) => { e.target.style.display = 'none' }}
+              />
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 'normal' }}>
+              <span style={{ fontFamily: ff, fontWeight: 500, fontSize: 16, letterSpacing: '-0.32px', color: textPrimary, transition: 'color 0.3s ease' }}>
+                Matias Cánepa
+              </span>
+              <span style={{ fontFamily: ff, fontSize: 12, color: textSecondary, transition: 'color 0.3s ease' }}>
+                Currently at{' '}
+                <span
+                  onMouseEnter={() => setPolaroidVisible(true)}
+                  onMouseLeave={() => setPolaroidVisible(false)}
+                  style={{ fontWeight: 600, color: textPrimary, borderBottom: `1px dashed ${textSecondary}`, cursor: 'default', transition: 'color 0.3s ease' }}
+                >
+                  Dinocloud
+                </span>
+              </span>
+            </div>
           </div>
-        ))}
+          <ThemeSwitch />
+        </div>
+        <Polaroid visible={polaroidVisible} />
+
       </div>
     </aside>
   )

@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { HashRouter as BrowserRouter, Routes, Route } from 'react-router-dom'
 import Sidebar from './components/Sidebar'
 import Home from './pages/Home'
@@ -6,12 +7,13 @@ import Cursor from './components/Cursor'
 import { ThemeProvider } from './context/ThemeContext'
 
 function Layout() {
+  const [active, setActive] = useState(0)
   return (
     <div className="min-h-screen flex flex-col lg:flex-row gap-[16px] lg:items-start">
-      <Sidebar />
+      <Sidebar active={active} setActive={setActive} />
       <main className="flex-1">
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Home active={active} />} />
         </Routes>
       </main>
     </div>
