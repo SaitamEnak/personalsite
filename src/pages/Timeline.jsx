@@ -116,37 +116,57 @@ function Lightbox({ index, onClose, onPrev, onNext }) {
   const cardBg = dark ? '#1e1b22' : '#ffffff'
 
   return createPortal(
+    <>
+    <style>{`
+      .lb-overlay { padding: 24px; align-items: center; }
+      .lb-modal { grid-template-columns: 1fr 1fr; border-radius: 20px; max-height: 90vh; overflow: hidden; }
+      .lb-image { aspect-ratio: 3/4; }
+      .lb-text { padding: 36px; }
+      .lb-modal-enter { transform: scale(0.96) translateY(16px); }
+      .lb-modal-enter-done { transform: scale(1) translateY(0); }
+      @media (max-width: 600px) {
+        .lb-overlay { padding: 0 !important; align-items: flex-end !important; }
+        .lb-modal {
+          grid-template-columns: 1fr !important;
+          border-radius: 24px 24px 0 0 !important;
+          max-height: 96vh !important;
+          overflow-y: auto !important;
+          width: 100% !important;
+          max-width: 100% !important;
+        }
+        .lb-image { aspect-ratio: 3/4 !important; width: 100% !important; max-height: none !important; }
+        .lb-text { padding: 24px 20px 40px !important; }
+        .lb-modal-enter { transform: translateY(60px) !important; }
+        .lb-modal-enter-done { transform: translateY(0) !important; }
+      }
+    `}</style>
     <div
+      className="lb-overlay"
       onClick={onClose}
       style={{
         position: 'fixed', inset: 0, zIndex: 200,
         background: 'rgba(0,0,0,0.75)',
         backdropFilter: 'blur(8px)',
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        padding: 24,
+        display: 'flex', justifyContent: 'center',
         opacity: visible ? 1 : 0,
         transition: 'opacity 0.25s ease',
       }}
     >
       <div
+        className={`lb-modal ${contentVisible ? 'lb-modal-enter-done' : 'lb-modal-enter'}`}
         onClick={e => e.stopPropagation()}
         style={{
           display: 'grid',
-          gridTemplateColumns: '1fr 1fr',
           maxWidth: 820,
           width: '100%',
-          maxHeight: '90vh',
           background: cardBg,
-          borderRadius: 20,
-          overflow: 'hidden',
           boxShadow: '0 32px 80px rgba(0,0,0,0.5)',
-          transform: contentVisible ? 'scale(1) translateY(0)' : 'scale(0.96) translateY(16px)',
           opacity: contentVisible ? 1 : 0,
-          transition: 'transform 0.3s cubic-bezier(0.34,1.2,0.64,1), opacity 0.25s ease',
+          transition: 'transform 0.35s cubic-bezier(0.34,1.2,0.64,1), opacity 0.25s ease',
         }}
       >
         {/* Image */}
-        <div style={{ aspectRatio: '3/4', background: entry.gradient, position: 'relative', overflow: 'hidden' }}>
+        <div className="lb-image" style={{ background: entry.gradient, position: 'relative', overflow: 'hidden' }}>
           {entry.image
             ? <img src={entry.image} alt={entry.year} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
             : <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -182,7 +202,7 @@ function Lightbox({ index, onClose, onPrev, onNext }) {
         </div>
 
         {/* Text */}
-        <div style={{ padding: 36, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', overflowY: 'auto' }}>
+        <div className="lb-text" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', overflowY: 'auto' }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
             <span style={{ fontFamily: ff, fontSize: 48, fontWeight: 800, letterSpacing: '-2px', color: textPrimary, lineHeight: 1 }}>
               {entry.year}
@@ -221,7 +241,8 @@ function Lightbox({ index, onClose, onPrev, onNext }) {
           <X size={16} />
         </button>
       </div>
-    </div>,
+    </div>
+    </>,
     document.body
   )
 }
