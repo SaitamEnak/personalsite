@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { X, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useTheme } from '../context/ThemeContext'
@@ -96,6 +96,21 @@ function Lightbox({ index, onClose, onPrev, onNext }) {
   const entry = flat[index]
   const [visible, setVisible] = useState(false)
   const [contentVisible, setContentVisible] = useState(false)
+  const touchStartX = useRef(null)
+
+  const handleTouchStart = (e) => {
+    touchStartX.current = e.touches[0].clientX
+  }
+
+  const handleTouchEnd = (e) => {
+    if (touchStartX.current === null) return
+    const delta = touchStartX.current - e.changedTouches[0].clientX
+    if (Math.abs(delta) > 50) {
+      if (delta > 0 && index < flat.length - 1) onNext()
+      if (delta < 0 && index > 0) onPrev()
+    }
+    touchStartX.current = null
+  }
 
   useEffect(() => {
     requestAnimationFrame(() => {
@@ -155,6 +170,8 @@ function Lightbox({ index, onClose, onPrev, onNext }) {
       <div
         className={`lb-modal ${contentVisible ? 'lb-modal-enter-done' : 'lb-modal-enter'}`}
         onClick={e => e.stopPropagation()}
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
         style={{
           display: 'grid',
           maxWidth: 820,
