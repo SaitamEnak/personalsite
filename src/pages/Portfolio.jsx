@@ -2,6 +2,7 @@ import { ArrowUpRight } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { useTheme } from '../context/ThemeContext'
 import { fetchCollection } from '../lib/cms'
+import SectionHeader from '../components/SectionHeader'
 
 const ff = 'Figtree, sans-serif'
 
@@ -60,12 +61,11 @@ function ProjectCard({ project, index, className = '' }) {
         borderRadius: 16,
         overflow: 'hidden',
         cursor: 'pointer',
-        border: `1px solid ${border}`,
         background: project.gradient,
         position: 'relative',
         aspectRatio: '4/3',
         transition: 'box-shadow 0.2s ease',
-        boxShadow: hovered ? '0 0 0 2px #7002FF' : 'none',
+        boxShadow: hovered ? `0 0 0 2px #7002FF, inset 0 0 0 1px ${border}` : `inset 0 0 0 1px ${border}`,
       }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
@@ -127,11 +127,14 @@ export default function Portfolio() {
   const [featured, ...rest] = allProjects
 
   return (
-    <div className="grid-bento" style={{ gap: 12, maxWidth: 760, margin: '0 auto', gridAutoRows: 'auto' }}>
+    <div style={{ maxWidth: 760, margin: '0 auto' }}>
+      <SectionHeader title="Portfolio" desc="Proyectos de producto en los que trabajé." />
+    <div className="grid-bento" style={{ gap: 12, gridAutoRows: 'auto' }}>
       <ProjectCard project={featured} index={0} className="bento-featured" />
       {rest.map((p, i) => (
         <ProjectCard key={p.title} project={p} index={i + 1} />
       ))}
+    </div>
     </div>
   )
 }
