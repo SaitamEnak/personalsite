@@ -8,12 +8,13 @@ import { ThemeProvider } from './context/ThemeContext'
 
 function Layout() {
   const [active, setActive] = useState(0)
+  const [sidebarOpen, setSidebarOpen] = useState(true)
   return (
     <div className="min-h-screen flex flex-col lg:flex-row gap-[16px] lg:items-start">
-      <Sidebar active={active} setActive={setActive} />
+      <Sidebar active={active} setActive={setActive} open={sidebarOpen} setOpen={setSidebarOpen} />
       <main className="flex-1">
         <Routes>
-          <Route path="/" element={<Home active={active} />} />
+          <Route path="/" element={<Home active={active} setActive={setActive} />} />
         </Routes>
       </main>
     </div>

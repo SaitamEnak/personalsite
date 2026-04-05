@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import { createPortal } from 'react-dom'
-import { Sun, Moon } from 'lucide-react'
+import { Sun, Moon, PanelLeftClose, PanelLeft } from 'lucide-react'
 import { FaLinkedinIn, FaDribbble, FaBehance, FaEnvelope } from 'react-icons/fa'
 import { useTheme } from '../context/ThemeContext'
 
-const TABS = ['Articles', 'Portfolio', 'Lab']
+const TABS = ['Home', 'Articles', 'Portfolio', 'Lab']
 
 const ff = 'Figtree, sans-serif'
 
@@ -124,7 +124,7 @@ function ThemeSwitch() {
   )
 }
 
-export default function Sidebar({ active, setActive }) {
+export default function Sidebar({ active, setActive, open, setOpen }) {
   const { dark } = useTheme()
   const [polaroidVisible, setPolaroidVisible] = useState(false)
 
@@ -137,8 +137,37 @@ export default function Sidebar({ active, setActive }) {
   const activeBg = dark ? 'rgba(255,255,255,0.08)' : '#e4e4f0'
 
   return (
+    <>
+      {/* Floating open button when sidebar is hidden */}
+      {!open && (
+        <button
+          onClick={() => setOpen(true)}
+          aria-label="Open sidebar"
+          style={{
+            position: 'fixed',
+            top: 16,
+            left: 16,
+            zIndex: 200,
+            width: 40,
+            height: 40,
+            borderRadius: 10,
+            border: 'none',
+            background: bg,
+            color: textSecondary,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'pointer',
+            boxShadow: dark ? '0 2px 12px rgba(0,0,0,0.4)' : '0 2px 12px rgba(0,0,0,0.12)',
+            transition: 'background 0.3s',
+          }}
+        >
+          <PanelLeft size={18} />
+        </button>
+      )}
+
     <aside
-      className="lg:sticky lg:top-[16px] lg:shrink-0 rounded-2xl overflow-hidden w-full lg:w-[400px] lg:h-[calc(100vh-32px)]"
+      className="lg:sticky lg:top-[16px] lg:shrink-0 rounded-2xl overflow-hidden w-full lg:h-[calc(100vh-32px)]"
       style={{
         padding: '24px',
         display: 'flex',
@@ -146,8 +175,13 @@ export default function Sidebar({ active, setActive }) {
         justifyContent: 'space-between',
         gap: '32px',
         background: bg,
-        transition: 'background 0.3s ease',
+        transition: 'background 0.3s ease, width 0.3s ease, min-width 0.3s ease, opacity 0.3s ease, padding 0.3s ease',
         zIndex: 101,
+        width: open ? 400 : 0,
+        minWidth: open ? 400 : 0,
+        opacity: open ? 1 : 0,
+        padding: open ? '24px' : '0',
+        pointerEvents: open ? 'auto' : 'none',
       }}
     >
       {/* Top: Nav */}
@@ -274,11 +308,41 @@ export default function Sidebar({ active, setActive }) {
               </span>
             </div>
           </div>
-          <ThemeSwitch />
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <ThemeSwitch />
+            <button
+              onClick={() => setOpen(false)}
+              aria-label="Close sidebar"
+              style={{
+                width: 36,
+                height: 28,
+                borderRadius: 8,
+                border: 'none',
+                background: 'transparent',
+                color: textSecondary,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                transition: 'background 0.15s, color 0.15s',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = hoverBg
+                e.currentTarget.style.color = hoverColor
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'transparent'
+                e.currentTarget.style.color = textSecondary
+              }}
+            >
+              <PanelLeftClose size={16} />
+            </button>
+          </div>
         </div>
         <Polaroid visible={polaroidVisible} />
 
       </div>
     </aside>
+    </>
   )
 }
