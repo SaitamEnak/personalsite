@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { X, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useTheme } from '../context/ThemeContext'
+import SectionHeader from '../components/SectionHeader'
 
 const ff = 'Figtree, sans-serif'
 
@@ -288,8 +289,9 @@ export default function Timeline() {
 
   const textPrimary = dark ? '#f0f0f0' : '#111'
   const textSecondary = dark ? '#a8a8a8' : '#606060'
-  const lineBg = dark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)'
-  const dotBg = dark ? 'rgba(255,255,255,0.25)' : 'rgba(0,0,0,0.2)'
+  const pageBg = dark ? '#0C0014' : '#C8C7CC'
+  const lineBg = dark ? '#2a2535' : '#b0afb5'
+  const dotBg = dark ? '#5a5568' : '#88878f'
   const cardBg = dark ? '#2a2630' : '#ffffff'
   const cardBorder = dark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)'
   const dividerColor = dark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)'
@@ -299,6 +301,7 @@ export default function Timeline() {
   return (
     <>
       <div className="reveal" style={{ width: '100%', maxWidth: 680, margin: '0 auto', padding: '8px 0 40px' }}>
+        <SectionHeader title="Timeline" desc="Evolución de mi trabajo a través del tiempo." />
         <div style={{ position: 'relative' }}>
 
           {/* Vertical line */}
@@ -314,7 +317,7 @@ export default function Timeline() {
                 {/* Year divider */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 10 }}>
                   <div style={{ flexShrink: 0, width: 40, display: 'flex', justifyContent: 'center' }}>
-                    <div style={{ width: 8, height: 8, borderRadius: '50%', background: dotBg }} />
+                    <div style={{ width: 8, height: 8, borderRadius: '50%', background: dotBg, border: `6px solid ${pageBg}`, boxSizing: 'content-box', position: 'relative', zIndex: 1 }} />
                   </div>
                   <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 10 }}>
                     <span style={{ fontFamily: ff, fontSize: 22, fontWeight: 800, letterSpacing: '-0.5px', color: textPrimary, whiteSpace: 'nowrap', transition: 'color 0.3s' }}>

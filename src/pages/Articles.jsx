@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useTheme } from '../context/ThemeContext'
 import { articles as fallbackArticles } from '../data/articles'
 import { fetchCollection } from '../lib/cms'
+import SectionHeader from '../components/SectionHeader'
 
 const ff = 'Figtree, sans-serif'
 const THUMB_RATIO = '4 / 3' // aspect ratio compartido entre cards normales y featured
@@ -54,9 +55,8 @@ function FeaturedCard({ article, index }) {
         borderRadius: 14,
         overflow: 'hidden',
         cursor: 'pointer',
-        border: `1px solid ${border}`,
         transition: 'box-shadow 0.2s ease, background 0.3s ease',
-        boxShadow: hovered ? '0 0 0 2px #7002FF' : 'none',
+        boxShadow: hovered ? `0 0 0 2px #7002FF, inset 0 0 0 1px ${border}` : `inset 0 0 0 1px ${border}`,
         display: 'flex',
         flexDirection: isMobile ? 'column' : 'row',
       }}
@@ -67,7 +67,7 @@ function FeaturedCard({ article, index }) {
       tabIndex={0}
     >
       {/* Thumbnail con mismo aspect ratio */}
-      <div style={{ position: 'relative', background: article.cover?.startsWith('http') ? `url(${article.cover}) center/cover no-repeat` : (article.cover || 'linear-gradient(135deg, #1a1a1a 0%, #3a3a3a 100%)'), aspectRatio: THUMB_RATIO, flexShrink: 0, width: isMobile ? '100%' : '45%', overflow: 'hidden' }}>
+      <div style={{ position: 'relative', background: article.cover?.startsWith('http') ? `url(${article.cover}) center/cover no-repeat` : (article.cover || 'linear-gradient(135deg, #1a1a1a 0%, #3a3a3a 100%)'), aspectRatio: THUMB_RATIO, flexShrink: 0, width: isMobile ? '100%' : '45%', overflow: 'hidden', borderRadius: isMobile ? '14px 14px 0 0' : '14px 0 0 14px' }}>
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(255,255,255,0.18) 0%, transparent 55%)', opacity: hovered ? 1 : 0, transition: 'opacity 0.35s ease', pointerEvents: 'none' }} />
       </div>
 
@@ -99,9 +99,8 @@ function ArticleCard({ article, index }) {
         borderRadius: 14,
         overflow: 'hidden',
         cursor: 'pointer',
-        border: `1px solid ${border}`,
         transition: 'box-shadow 0.2s ease, background 0.3s ease',
-        boxShadow: hovered ? '0 0 0 2px #7002FF' : 'none',
+        boxShadow: hovered ? `0 0 0 2px #7002FF, inset 0 0 0 1px ${border}` : `inset 0 0 0 1px ${border}`,
         display: 'flex',
         flexDirection: 'column',
       }}
@@ -112,7 +111,7 @@ function ArticleCard({ article, index }) {
       tabIndex={0}
     >
       {/* Thumbnail con mismo aspect ratio */}
-      <div style={{ position: 'relative', background: article.cover?.startsWith('http') ? `url(${article.cover}) center/cover no-repeat` : (article.cover || 'linear-gradient(135deg, #1a1a1a 0%, #3a3a3a 100%)'), aspectRatio: THUMB_RATIO, width: '100%', overflow: 'hidden' }}>
+      <div style={{ position: 'relative', background: article.cover?.startsWith('http') ? `url(${article.cover}) center/cover no-repeat` : (article.cover || 'linear-gradient(135deg, #1a1a1a 0%, #3a3a3a 100%)'), aspectRatio: THUMB_RATIO, width: '100%', overflow: 'hidden', borderRadius: '14px 14px 0 0' }}>
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(255,255,255,0.18) 0%, transparent 55%)', opacity: hovered ? 1 : 0, transition: 'opacity 0.35s ease', pointerEvents: 'none' }} />
       </div>
 
@@ -187,6 +186,7 @@ export default function Articles() {
 
   return (
     <div style={{ maxWidth: 860, margin: '0 auto' }}>
+      <SectionHeader title="Articles" desc="Notas sobre diseño, proceso y criterio." />
       <FilterBar tags={tags} active={activeTag} onChange={setActiveTag} />
       <div className="articles-grid" style={{ display: 'grid', gap: 12 }}>
         {featured && <FeaturedCard article={featured} index={0} />}

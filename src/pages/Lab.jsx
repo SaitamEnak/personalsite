@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useTheme } from '../context/ThemeContext'
 import { fetchCollection } from '../lib/cms'
+import SectionHeader from '../components/SectionHeader'
 
 const ff = 'Figtree, sans-serif'
 const mono = "'Space Mono', monospace"
@@ -36,8 +37,7 @@ function Card({ children, thumb, className = '', index = 0 }) {
       role="button"
       tabIndex={0}
     >
-      <div style={{ position: 'relative', width: '100%', aspectRatio: '4/3', overflow: 'hidden' }}>
-        <div style={{ width: '100%', height: '100%', background: thumb?.startsWith('http') ? `url(${thumb}) center/cover no-repeat` : thumb }} />
+      <div style={{ position: 'relative', width: '100%', aspectRatio: '4/3', overflow: 'hidden', borderRadius: '16px 16px 0 0', background: thumb?.startsWith('http') ? `url(${thumb}) center/cover no-repeat` : thumb }}>
         <div style={{
           position: 'absolute', inset: 0,
           background: 'linear-gradient(135deg, rgba(255,255,255,0.18) 0%, transparent 55%)',
@@ -80,7 +80,9 @@ export default function Lab() {
   )
 
   return (
-    <div className="grid-bento" style={{ gap: 12, maxWidth: 760, margin: '0 auto' }}>
+    <div style={{ maxWidth: 760, margin: '0 auto' }}>
+      <SectionHeader title="Lab" desc="Experimentos, prototipos y curiosidades." />
+    <div className="grid-bento" style={{ gap: 12 }}>
       {experiments.map((e, i) => (
         <Card key={e.slug ?? e.title} index={i} thumb={e.thumb}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -89,6 +91,7 @@ export default function Lab() {
           </div>
         </Card>
       ))}
+    </div>
     </div>
   )
 }
