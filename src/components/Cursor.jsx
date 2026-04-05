@@ -36,7 +36,15 @@ export default function Cursor() {
 
     addListeners()
 
-    const observer = new MutationObserver(addListeners)
+    const observer = new MutationObserver((mutations) => {
+      addListeners()
+      // If a hovered element was removed, reset cursor
+      for (const m of mutations) {
+        if (m.removedNodes.length > 0) {
+          shrink()
+        }
+      }
+    })
     observer.observe(document.body, { childList: true, subtree: true })
 
     return () => {

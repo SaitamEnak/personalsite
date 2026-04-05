@@ -2,6 +2,7 @@ import Tabs from '../components/Tabs'
 import Articles from './Articles'
 import Portfolio from './Portfolio'
 import Lab from './Lab'
+import Timeline from './Timeline'
 
 export default function Home() {
   return (
@@ -10,6 +11,7 @@ export default function Home() {
         <Articles />
         <Portfolio />
         <Lab />
+        <Timeline />
       </Tabs>
     </div>
   )

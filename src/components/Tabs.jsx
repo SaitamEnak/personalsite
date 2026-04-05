@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react'
 import { useTheme } from '../context/ThemeContext'
 
 const ff = 'Figtree, sans-serif'
-const TABS = ['Articles', 'Portfolio', 'Lab']
+const TABS = ['Articles', 'Portfolio', 'Lab', 'Timeline']
 
 export default function Tabs({ children }) {
   const { dark } = useTheme()
