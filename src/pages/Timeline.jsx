@@ -96,7 +96,17 @@ function Lightbox({ index, onClose, onPrev, onNext }) {
   const entry = flat[index]
   const [visible, setVisible] = useState(false)
   const [contentVisible, setContentVisible] = useState(false)
+  const [closing, setClosing] = useState(false)
   const touchStartX = useRef(null)
+
+  const handleClose = () => {
+    setClosing(true)
+    setContentVisible(false)
+    setTimeout(() => {
+      setVisible(false)
+      setTimeout(onClose, 150)
+    }, 180)
+  }
 
   const handleTouchStart = (e) => {
     touchStartX.current = e.touches[0].clientX
@@ -113,12 +123,13 @@ function Lightbox({ index, onClose, onPrev, onNext }) {
   }
 
   useEffect(() => {
+    setClosing(false)
     requestAnimationFrame(() => {
       setVisible(true)
       setTimeout(() => setContentVisible(true), 60)
     })
     const onKey = (e) => {
-      if (e.key === 'Escape') onClose()
+      if (e.key === 'Escape') handleClose()
       if (e.key === 'ArrowLeft' && index > 0) onPrev()
       if (e.key === 'ArrowRight' && index < flat.length - 1) onNext()
     }
@@ -157,7 +168,7 @@ function Lightbox({ index, onClose, onPrev, onNext }) {
     `}</style>
     <div
       className="lb-overlay"
-      onClick={onClose}
+      onClick={handleClose}
       style={{
         position: 'fixed', inset: 0, zIndex: 200,
         background: 'rgba(0,0,0,0.75)',
@@ -243,7 +254,7 @@ function Lightbox({ index, onClose, onPrev, onNext }) {
 
         {/* Close */}
         <button
-          onClick={onClose}
+          onClick={handleClose}
           style={{
             position: 'absolute', top: 16, right: 16,
             width: 34, height: 34, borderRadius: '50%', border: 'none',
