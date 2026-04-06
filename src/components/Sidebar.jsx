@@ -257,11 +257,15 @@ export default function Sidebar() {
           style={{
             animationDelay: '0.30s',
             fontFamily: ff,
-            fontSize: 13,
+            fontSize: 15,
             fontWeight: 400,
             color: textSecondary,
             transition: 'color 0.3s ease',
             margin: 0,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 8,
+            flexWrap: 'wrap',
           }}
         >
           Currently working at{' '}
@@ -269,11 +273,19 @@ export default function Sidebar() {
             onMouseEnter={() => setPolaroidVisible(true)}
             onMouseLeave={() => setPolaroidVisible(false)}
             style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 5,
               fontWeight: 600,
-              color: textPrimary,
-              borderBottom: `1px dashed ${textSecondary}`,
+              fontSize: 14,
+              color: '#fff',
+              background: '#48A371',
+              border: '1px solid #48A371',
+              borderRadius: 6,
+              padding: '3px 8px',
               cursor: 'default',
-              transition: 'color 0.3s ease',
+              transform: 'rotate(-3deg)',
+              transition: 'color 0.3s ease, background 0.3s ease, border-color 0.3s ease',
             }}
           >
             Dinocloud
