@@ -4,6 +4,8 @@ import { useTheme } from '../context/ThemeContext'
 import { fetchCollection } from '../lib/cms'
 import SectionHeader from '../components/SectionHeader'
 
+import { projects } from '../data/portfolio'
+
 const ff = 'Figtree, sans-serif'
 
 function useTokens() {
@@ -12,42 +14,6 @@ function useTokens() {
     border: dark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)',
   }
 }
-
-const projects = [
-  {
-    tag: 'Sistema de diseño',
-    title: 'Design System — Fintech',
-    desc: 'Tokens, componentes y documentación para un equipo de 12 diseñadores.',
-    year: '2024',
-    gradient: 'linear-gradient(140deg, #0f0c29 0%, #302b63 50%, #24243e 100%)',
-    accent: '#a78bfa',
-    featured: true,
-  },
-  {
-    tag: 'UX Research',
-    title: 'Rediseño de onboarding',
-    desc: 'Reducción del 40% en drop-off durante el flujo de activación.',
-    year: '2024',
-    gradient: 'linear-gradient(140deg, #0d1f2d 0%, #00416a 100%)',
-    accent: '#38bdf8',
-  },
-  {
-    tag: 'Producto',
-    title: 'App de gestión de turnos',
-    desc: 'Diseño end-to-end de una app móvil para el sector salud.',
-    year: '2023',
-    gradient: 'linear-gradient(140deg, #0f2027 0%, #203a43 50%, #2c5364 100%)',
-    accent: '#34d399',
-  },
-  {
-    tag: 'Web',
-    title: 'Sitio institucional — EdTech',
-    desc: 'Rediseño completo con foco en conversión y accesibilidad.',
-    year: '2023',
-    gradient: 'linear-gradient(140deg, #1a0533 0%, #4a0080 100%)',
-    accent: '#e879f9',
-  },
-]
 
 function ProjectCard({ project, index, className = '' }) {
   const { border } = useTokens()

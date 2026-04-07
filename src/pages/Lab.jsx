@@ -82,7 +82,7 @@ export default function Lab() {
   return (
     <div style={{ maxWidth: 760, margin: '0 auto' }}>
       <SectionHeader title="Lab" desc="Experimentos, prototipos y curiosidades." />
-    <div className="grid-bento" style={{ gap: 12 }}>
+    <div className="grid-bento" style={{ gap: 12, gridTemplateColumns: 'repeat(2, 1fr)' }}>
       {experiments.map((e, i) => (
         <Card key={e.slug ?? e.title} index={i} thumb={e.thumb}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
