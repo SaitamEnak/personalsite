@@ -210,7 +210,7 @@ export default function Sidebar() {
               letterSpacing: '0.03em',
               lineHeight: 1,
               whiteSpace: 'nowrap',
-              transform: 'rotate(-5deg)',
+              transform: 'rotate(-5deg) translateY(-6px) translateX(-8px)',
               display: 'inline-block',
               transition: 'color 0.3s ease',
               color: '#8B27FB',
@@ -226,9 +226,34 @@ export default function Sidebar() {
               letterSpacing: '-0.36px',
               color: textPrimary,
               transition: 'color 0.3s ease',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 8,
+              flexWrap: 'wrap',
             }}
           >
-            Product Designer
+            Product designer at{' '}
+            <span
+              onMouseEnter={() => setPolaroidVisible(true)}
+              onMouseLeave={() => setPolaroidVisible(false)}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 5,
+                fontWeight: 600,
+                fontSize: 14,
+                color: '#fff',
+                background: '#48A371',
+                border: '1px solid #48A371',
+                borderRadius: 6,
+                padding: '3px 8px',
+                cursor: 'default',
+                transform: 'rotate(-3deg)',
+                transition: 'color 0.3s ease, background 0.3s ease, border-color 0.3s ease',
+              }}
+            >
+              Dinocloud
+            </span>
           </span>
         </div>
 
@@ -251,46 +276,6 @@ export default function Sidebar() {
           la práctica del diseño.
         </p>
 
-        {/* Currently working at */}
-        <p
-          className="reveal"
-          style={{
-            animationDelay: '0.30s',
-            fontFamily: ff,
-            fontSize: 15,
-            fontWeight: 400,
-            color: textSecondary,
-            transition: 'color 0.3s ease',
-            margin: 0,
-            display: 'flex',
-            alignItems: 'center',
-            gap: 8,
-            flexWrap: 'wrap',
-          }}
-        >
-          Currently working at{' '}
-          <span
-            onMouseEnter={() => setPolaroidVisible(true)}
-            onMouseLeave={() => setPolaroidVisible(false)}
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: 5,
-              fontWeight: 600,
-              fontSize: 14,
-              color: '#fff',
-              background: '#48A371',
-              border: '1px solid #48A371',
-              borderRadius: 6,
-              padding: '3px 8px',
-              cursor: 'default',
-              transform: 'rotate(-3deg)',
-              transition: 'color 0.3s ease, background 0.3s ease, border-color 0.3s ease',
-            }}
-          >
-            Dinocloud
-          </span>
-        </p>
         <Polaroid visible={polaroidVisible} />
       </div>
 
