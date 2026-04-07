@@ -116,6 +116,34 @@ body {
   }
 }
 
+/* Overview hierarchy grid */
+.overview-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 1fr;
+  grid-template-areas:
+    "lab"
+    "articles"
+    "portfolio"
+    "timeline";
+}
+
+@media (min-width: 640px) {
+  .overview-grid {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-areas:
+      "lab      lab"
+      "articles portfolio"
+      "timeline timeline";
+  }
+}
+
+/* Min-heights por jerarquía (aplican en todos los breakpoints) */
+.overview-card--lab      { min-height: 280px; }
+.overview-card--articles { min-height: 230px; }
+.overview-card--portfolio{ min-height: 190px; }
+.overview-card--timeline { min-height: 140px; }
+
 /* Article TOC — hidden on mobile */
 .article-toc {
   display: block;

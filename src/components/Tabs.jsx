@@ -3,11 +3,13 @@ import { useTheme } from '../context/ThemeContext'
 
 const ff = 'Figtree, sans-serif'
 
-const TABS = ['Articles', 'Portfolio', 'Lab', 'Timeline']
+const TABS = ['Home', 'Articles', 'Portfolio', 'Lab', 'Timeline']
 
-export default function Tabs({ children }) {
+export default function Tabs({ children, active: propActive, onTabChange }) {
   const { dark } = useTheme()
-  const [active, setActive] = useState(0)
+  const [internalActive, setInternalActive] = useState(0)
+  const active = propActive ?? internalActive
+  const setActive = onTabChange ?? setInternalActive
   const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 })
   const tabRefs = useRef([])
 
