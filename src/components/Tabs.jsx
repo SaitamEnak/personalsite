@@ -24,6 +24,7 @@ export default function Tabs({ children, active: propActive, onTabChange }) {
     if (el) {
       setIndicatorStyle({ left: el.offsetLeft, width: el.offsetWidth })
     }
+    window.scrollTo({ top: 0, behavior: 'instant' })
   }, [active])
 
   const containerBg = dark ? '#242027' : '#aaaaaa'

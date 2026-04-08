@@ -94,6 +94,7 @@ export default function ArticleDetail() {
   const [allArticles, setAllArticles] = useState(fallbackArticles)
 
   useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' })
     fetchEntry('articles', slug).then(data => { if (data) setArticle(data) })
     fetchCollection('articles').then(data => { if (data.length > 0) setAllArticles(data) })
   }, [slug])
