@@ -92,11 +92,18 @@ export default function ArticleDetail() {
   const [activeId, setActiveId] = useState(null)
   const [article, setArticle] = useState(() => getArticle(slug))
   const [allArticles, setAllArticles] = useState(fallbackArticles)
+  const [fading, setFading] = useState(false)
 
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'instant' })
-    fetchEntry('articles', slug).then(data => { if (data) setArticle(data) })
-    fetchCollection('articles').then(data => { if (data.length > 0) setAllArticles(data) })
+    setFading(true)
+    const t = setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: 'instant' })
+      setArticle(getArticle(slug))
+      setFading(false)
+      fetchEntry('articles', slug).then(data => { if (data) setArticle(data) })
+      fetchCollection('articles').then(data => { if (data.length > 0) setAllArticles(data) })
+    }, 180)
+    return () => clearTimeout(t)
   }, [slug])
 
   const bg = dark ? '#0d0d0d' : '#FAFAFA'
@@ -138,7 +145,7 @@ export default function ArticleDetail() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: bg, margin: -16, padding: '32px 24px', transition: 'background 0.3s ease' }}>
+    <div style={{ minHeight: '100vh', background: bg, margin: -16, padding: '32px 24px', transition: 'background 0.3s ease, opacity 0.18s ease, transform 0.18s ease', opacity: fading ? 0 : 1, transform: fading ? 'translateY(10px)' : 'translateY(0)' }}>
 
       {/* Back button */}
       <div style={{ maxWidth: 960, margin: '0 auto 24px' }}>
