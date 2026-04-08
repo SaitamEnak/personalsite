@@ -172,7 +172,6 @@ export default function Sidebar() {
               onError={(e) => { e.target.style.display = 'none' }}
             />
           </div>
-          <ThemeSwitch />
         </div>
 
         {/* Name & Title */}
