@@ -1,9 +1,14 @@
 import { useState, useRef, useEffect } from 'react'
+import { House, BookOpen, Briefcase, FlaskConical, Clock } from 'lucide-react'
 import { useTheme } from '../context/ThemeContext'
 
-const ff = 'Figtree, sans-serif'
-
-const TABS = ['Home', 'Articles', 'Portfolio', 'Lab', 'Timeline']
+const TABS = [
+  { label: 'Home', Icon: House },
+  { label: 'Articles', Icon: BookOpen },
+  { label: 'Portfolio', Icon: Briefcase },
+  { label: 'Lab', Icon: FlaskConical },
+  { label: 'Timeline', Icon: Clock },
+]
 
 export default function Tabs({ children, active: propActive, onTabChange }) {
   const { dark } = useTheme()
@@ -12,6 +17,7 @@ export default function Tabs({ children, active: propActive, onTabChange }) {
   const setActive = onTabChange ?? setInternalActive
   const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 })
   const tabRefs = useRef([])
+  const [tooltip, setTooltip] = useState(null)
 
   useEffect(() => {
     const el = tabRefs.current[active]
@@ -21,81 +27,154 @@ export default function Tabs({ children, active: propActive, onTabChange }) {
   }, [active])
 
   const containerBg = dark ? '#242027' : '#aaaaaa'
-  const containerBorder = 'transparent'
   const indicatorBg = dark ? 'rgba(255,255,255,0.32)' : 'rgba(255,255,255,0.6)'
-  const textColor = dark ? '#dadada' : '#1a1a1a'
+  const iconColor = (isActive) => {
+    if (isActive) return dark ? '#fff' : '#111'
+    return dark ? '#888' : '#666'
+  }
+  const tooltipBg = dark ? '#3a3540' : '#222'
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-      <div style={{
-        display: 'flex',
-        justifyContent: 'center',
-        marginBottom: 16,
-        position: 'sticky',
-        top: 0,
-        zIndex: 10,
-        paddingTop: 8,
-        paddingBottom: 8,
-      }}>
-        <div
-          style={{
-            position: 'relative',
-            display: 'inline-flex',
-            alignItems: 'center',
-            background: containerBg,
-            border: `1px solid ${containerBorder}`,
-            borderRadius: 10,
-            padding: 4,
-            transition: 'background 0.3s, border-color 0.3s',
-          }}
-        >
-          {/* Sliding indicator */}
-          <span
-            style={{
-              position: 'absolute',
-              top: 4,
-              left: indicatorStyle.left,
-              width: indicatorStyle.width,
-              height: 'calc(100% - 8px)',
-              borderRadius: 8,
-              background: indicatorBg,
-              transition: 'left 0.25s cubic-bezier(0.4, 0, 0.2, 1), width 0.25s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s',
-              pointerEvents: 'none',
-              zIndex: 0,
-            }}
-          />
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100%' }}>
 
-          {TABS.map((tab, i) => (
-            <button
-              key={tab}
+      {/* Content */}
+      <div key={active} className="tab-enter pb-28" style={{ flex: 1 }}>
+        {children[active]}
+      </div>
+
+      {/* Desktop: pill tab bar — fixed bottom, centered within main — hidden on mobile */}
+      {/* left = body padding (16) + sidebar (400) + gap (16) = 432px on lg+ */}
+      <div className="hidden sm:flex left-0 right-0 lg:left-[432px] lg:right-[16px]" style={{
+        justifyContent: 'center',
+        position: 'fixed',
+        bottom: 24,
+        zIndex: 50,
+        pointerEvents: 'none',
+      }}>
+        <div style={{
+          pointerEvents: 'auto',
+          position: 'relative',
+          display: 'inline-flex',
+          alignItems: 'center',
+          background: containerBg,
+          borderRadius: 18,
+          padding: 8,
+          transition: 'background 0.3s',
+        }}>
+          <span style={{
+            position: 'absolute',
+            top: 8,
+            left: indicatorStyle.left,
+            width: indicatorStyle.width,
+            height: 'calc(100% - 16px)',
+            borderRadius: 10,
+            background: indicatorBg,
+            transition: 'left 0.25s cubic-bezier(0.4, 0, 0.2, 1), width 0.25s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s',
+            pointerEvents: 'none',
+            zIndex: 0,
+          }} />
+
+          {TABS.map(({ label, Icon }, i) => (
+            <div
+              key={label}
               ref={el => tabRefs.current[i] = el}
-              onClick={() => setActive(i)}
-              style={{
-                fontFamily: ff,
-                fontSize: 16,
-                fontWeight: active === i ? 600 : 400,
-                letterSpacing: '-0.24px',
-                color: textColor,
-                background: 'none',
-                border: 'none',
-                borderRadius: 8,
-                padding: '10px 20px',
-                whiteSpace: 'nowrap',
-                transition: 'color 0.2s, font-weight 0.2s',
-                lineHeight: 'normal',
-                position: 'relative',
-                zIndex: 1,
-              }}
+              style={{ position: 'relative' }}
             >
-              {tab}
-            </button>
+              <button
+                onClick={() => setActive(i)}
+                onMouseEnter={() => setTooltip(i)}
+                onMouseLeave={() => setTooltip(null)}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: 52,
+                  height: 44,
+                  color: iconColor(active === i),
+                  background: 'none',
+                  border: 'none',
+                  borderRadius: 8,
+                  cursor: 'pointer',
+                  position: 'relative',
+                  zIndex: 1,
+                  transition: 'color 0.2s',
+                }}
+              >
+                <Icon size={20} strokeWidth={active === i ? 2.8 : 2} />
+              </button>
+
+              {tooltip === i && (
+                <span style={{
+                  position: 'absolute',
+                  bottom: 'calc(100% + 6px)',
+                  left: '50%',
+                  transform: 'translateX(-50%)',
+                  background: tooltipBg,
+                  color: '#fff',
+                  fontSize: 12,
+                  fontFamily: 'Figtree, sans-serif',
+                  fontWeight: 500,
+                  padding: '4px 8px',
+                  borderRadius: 6,
+                  whiteSpace: 'nowrap',
+                  pointerEvents: 'none',
+                  zIndex: 100,
+                }}>
+                  {label}
+                </span>
+              )}
+            </div>
           ))}
         </div>
       </div>
 
-      <div key={active} className="tab-enter" style={{ flex: 1 }}>
-        {children[active]}
-      </div>
+      {/* Mobile: bottom navigation — hidden on desktop */}
+      <nav className="flex sm:hidden" style={{
+        position: 'fixed',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        zIndex: 50,
+        alignItems: 'stretch',
+        background: dark ? '#1c1a1f' : '#e0e0e0',
+        borderTop: `1px solid ${dark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.1)'}`,
+        paddingBottom: 'env(safe-area-inset-bottom)',
+      }}>
+        {TABS.map(({ label, Icon }, i) => {
+          const isActive = active === i
+          return (
+            <button
+              key={label}
+              onClick={() => setActive(i)}
+              style={{
+                flex: 1,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 4,
+                padding: '10px 0',
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                color: iconColor(isActive),
+                transition: 'color 0.2s',
+              }}
+            >
+              <Icon size={22} strokeWidth={isActive ? 2.5 : 1.8} />
+              <span style={{
+                fontSize: 10,
+                fontFamily: 'Figtree, sans-serif',
+                fontWeight: isActive ? 600 : 400,
+                letterSpacing: '0.01em',
+              }}>
+                {label}
+              </span>
+            </button>
+          )
+        })}
+      </nav>
+
     </div>
   )
 }
