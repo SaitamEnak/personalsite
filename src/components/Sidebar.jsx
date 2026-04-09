@@ -1,7 +1,9 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { ArrowUpRight, Sun, Moon } from 'lucide-react'
 import { useTheme } from '../context/ThemeContext'
+import stickerGoku from '../assets/dinostickergoku.png'
+import stickerRocker from '../assets/dinostickerrocker.png'
 
 const links = [
   { label: 'LinkedIn', href: 'https://www.linkedin.com/in/mcanepadcv' },
@@ -12,67 +14,140 @@ const links = [
 
 const ff = 'Figtree, sans-serif'
 
-function Polaroid({ visible }) {
+function DraggableSticker({ src, initialStyle, zIndex, visible, exitRotate }) {
+  const [pos, setPos] = useState({ x: 0, y: 0 })
+  const dragging = useRef(false)
+  const origin = useRef({ mx: 0, my: 0, px: 0, py: 0 })
+
+  const onMouseDown = (e) => {
+    e.stopPropagation()
+    dragging.current = true
+    origin.current = { mx: e.clientX, my: e.clientY, px: pos.x, py: pos.y }
+
+    const onMove = (ev) => {
+      if (!dragging.current) return
+      setPos({
+        x: origin.current.px + ev.clientX - origin.current.mx,
+        y: origin.current.py + ev.clientY - origin.current.my,
+      })
+    }
+    const onUp = () => {
+      dragging.current = false
+      window.removeEventListener('mousemove', onMove)
+      window.removeEventListener('mouseup', onUp)
+    }
+    window.addEventListener('mousemove', onMove)
+    window.addEventListener('mouseup', onUp)
+  }
+
+  return (
+    <img
+      src={src}
+      onMouseDown={onMouseDown}
+      draggable={false}
+      onClick={(e) => e.stopPropagation()}
+      style={{
+        position: 'absolute',
+        zIndex,
+        translate: visible ? '0px 0px' : '0px 110vh',
+        rotate: visible ? '0deg' : exitRotate,
+        opacity: visible ? 1 : 0,
+        transform: `translate(${pos.x}px, ${pos.y}px)`,
+        transition: 'translate 0.5s cubic-bezier(0.34, 1.4, 0.64, 1), rotate 0.5s cubic-bezier(0.34, 1.4, 0.64, 1), opacity 0.3s ease',
+        cursor: dragging.current ? 'grabbing' : 'grab',
+        userSelect: 'none',
+        pointerEvents: 'auto',
+        ...initialStyle,
+      }}
+    />
+  )
+}
+
+function Polaroid({ visible, onClose }) {
   return createPortal(
     <>
       {/* Overlay */}
       <div
+        onClick={onClose}
         style={{
           position: 'fixed',
           inset: 0,
-          pointerEvents: 'none',
+          pointerEvents: visible ? 'auto' : 'none',
           zIndex: 100,
           opacity: visible ? 1 : 0,
           background: 'rgba(0,0,0,0.45)',
           transition: 'opacity 0.4s ease',
         }}
       />
-      {/* Polaroid */}
-      <div
-        style={{
-          position: 'fixed',
-          inset: 0,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          pointerEvents: 'none',
-          zIndex: 102,
-        }}
-      >
+
+      {/* Stickers + Polaroid — single passthrough container above overlay */}
+      <div style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 101 }}>
+
+        {/* Sticker over polaroid */}
+        <DraggableSticker
+          src={stickerGoku}
+          zIndex={3}
+          visible={visible}
+          exitRotate="20deg"
+          initialStyle={{ width: 130, bottom: 'calc(50% - 220px)', left: 'calc(50% + 110px)' }}
+        />
+
+        {/* Polaroid */}
         <div
           style={{
-            translate: visible ? '0 0' : '0 110vh',
-            rotate: visible ? '-2deg' : '18deg',
-            opacity: visible ? 1 : 0,
-            transition: 'translate 0.5s cubic-bezier(0.34, 1.4, 0.64, 1), rotate 0.5s cubic-bezier(0.34, 1.4, 0.64, 1), opacity 0.3s ease',
-            background: '#fff',
-            padding: '12px 12px 40px',
-            borderRadius: 4,
-            boxShadow: '0 24px 64px rgba(0,0,0,0.28), 0 4px 16px rgba(0,0,0,0.12)',
-            width: 320,
+            position: 'absolute',
+            inset: 0,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            pointerEvents: 'none',
+            zIndex: 2,
           }}
         >
-          {/* Image area */}
           <div
             style={{
-              width: '100%',
-              aspectRatio: '1/1',
-              background: 'linear-gradient(135deg, #0a1628 0%, #1a4080 60%, #2563c4 100%)',
-              borderRadius: 2,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
+              translate: visible ? '0 0' : '0 110vh',
+              rotate: visible ? '-2deg' : '18deg',
+              transition: 'translate 0.5s cubic-bezier(0.34, 1.4, 0.64, 1), rotate 0.5s cubic-bezier(0.34, 1.4, 0.64, 1)',
+              background: '#fff',
+              padding: '12px 12px 40px',
+              borderRadius: 4,
+              boxShadow: '0 24px 64px rgba(0,0,0,0.28), 0 4px 16px rgba(0,0,0,0.12)',
+              width: 320,
             }}
           >
-            <span style={{ fontFamily: ff, fontSize: 22, fontWeight: 700, color: '#fff', letterSpacing: '-0.5px' }}>
-              Dinocloud
-            </span>
+            {/* Image area */}
+            <div
+              style={{
+                width: '100%',
+                aspectRatio: '1/1',
+                background: 'linear-gradient(135deg, #0a1628 0%, #1a4080 60%, #2563c4 100%)',
+                borderRadius: 2,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <span style={{ fontFamily: ff, fontSize: 22, fontWeight: 700, color: '#fff', letterSpacing: '-0.5px' }}>
+                Dinocloud
+              </span>
+            </div>
+            {/* Caption */}
+            <p style={{ fontFamily: ff, fontSize: 12, color: '#888', textAlign: 'center', margin: '12px 0 0', letterSpacing: '0.02em' }}>
+              dinocloud.com
+            </p>
           </div>
-          {/* Caption */}
-          <p style={{ fontFamily: ff, fontSize: 12, color: '#888', textAlign: 'center', margin: '12px 0 0', letterSpacing: '0.02em' }}>
-            dinocloud.com
-          </p>
         </div>
+
+        {/* Sticker over polaroid */}
+        <DraggableSticker
+          src={stickerRocker}
+          zIndex={4}
+          visible={visible}
+          exitRotate="-15deg"
+          initialStyle={{ width: 110, top: 'calc(50% - 220px)', left: 'calc(50% - 200px)' }}
+        />
+
       </div>
     </>,
     document.body
@@ -233,8 +308,10 @@ export default function Sidebar() {
           >
             Product designer at{' '}
             <span
-              onMouseEnter={() => setPolaroidVisible(true)}
-              onMouseLeave={() => setPolaroidVisible(false)}
+              role="button"
+              onClick={() => setPolaroidVisible(v => !v)}
+              onMouseEnter={(e) => { e.currentTarget.style.background = '#3a8a5e'; e.currentTarget.style.borderColor = '#3a8a5e' }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = '#48A371'; e.currentTarget.style.borderColor = '#48A371' }}
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
@@ -246,9 +323,9 @@ export default function Sidebar() {
                 border: '1px solid #48A371',
                 borderRadius: 6,
                 padding: '3px 8px',
-                cursor: 'default',
+                cursor: 'pointer',
                 transform: 'rotate(-3deg)',
-                transition: 'color 0.3s ease, background 0.3s ease, border-color 0.3s ease',
+                transition: 'color 0.3s ease, background 0.2s ease, border-color 0.2s ease',
               }}
             >
               Dinocloud
@@ -275,7 +352,7 @@ export default function Sidebar() {
           la práctica del diseño.
         </p>
 
-        <Polaroid visible={polaroidVisible} />
+        <Polaroid visible={polaroidVisible} onClose={() => setPolaroidVisible(false)} />
       </div>
 
       {/* Bottom: Links */}
