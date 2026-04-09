@@ -43,12 +43,12 @@ export default function Tabs({ children, active: propActive, onTabChange }) {
         {children[active]}
       </div>
 
-      {/* Desktop: pill tab bar — fixed bottom, centered within main — hidden on mobile */}
+      {/* Pill tab bar — fixed bottom, centered. On lg+: offset for sidebar */}
       {/* left = body padding (16) + sidebar (400) + gap (16) = 432px on lg+ */}
-      <div className="hidden sm:flex left-0 right-0 lg:left-[432px] lg:right-[16px]" style={{
+      <div className="flex left-0 right-0 lg:left-[432px] lg:right-[16px]" style={{
         justifyContent: 'center',
         position: 'fixed',
-        bottom: 24,
+        bottom: 'calc(24px + env(safe-area-inset-bottom))',
         zIndex: 50,
         pointerEvents: 'none',
       }}>
@@ -129,52 +129,6 @@ export default function Tabs({ children, active: propActive, onTabChange }) {
         </div>
       </div>
 
-      {/* Mobile: bottom navigation — hidden on desktop */}
-      <nav className="flex sm:hidden" style={{
-        position: 'fixed',
-        bottom: 0,
-        left: 0,
-        right: 0,
-        zIndex: 50,
-        alignItems: 'stretch',
-        background: dark ? '#1c1a1f' : '#e0e0e0',
-        borderTop: `1px solid ${dark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.1)'}`,
-        paddingBottom: 'env(safe-area-inset-bottom)',
-      }}>
-        {TABS.map(({ label, Icon }, i) => {
-          const isActive = active === i
-          return (
-            <button
-              key={label}
-              onClick={() => setActive(i)}
-              style={{
-                flex: 1,
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: 4,
-                padding: '10px 0',
-                background: 'none',
-                border: 'none',
-                cursor: 'pointer',
-                color: iconColor(isActive),
-                transition: 'color 0.2s',
-              }}
-            >
-              <Icon size={22} strokeWidth={isActive ? 2.5 : 1.8} />
-              <span style={{
-                fontSize: 10,
-                fontFamily: 'Figtree, sans-serif',
-                fontWeight: isActive ? 600 : 400,
-                letterSpacing: '0.01em',
-              }}>
-                {label}
-              </span>
-            </button>
-          )
-        })}
-      </nav>
 
     </div>
   )
