@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
-import { useTheme } from '../context/ThemeContext'
 import { articles } from '../data/articles.js'
 import { projects } from '../data/portfolio.js'
 import { fetchCollection } from '../lib/cms.js'
+import SectionHeader from '../components/SectionHeader'
 
 const ff = 'Figtree, sans-serif'
 const mono = "'Space Mono', monospace"
@@ -355,9 +355,6 @@ function SectionCard({ type, animIndex, onNavigate, labItems = [] }) {
 // ─── Overview ─────────────────────────────────────────────────────────────────
 
 export default function Overview({ onNavigate }) {
-  const { dark } = useTheme()
-  const textPrimary = dark ? '#f0f0f0' : '#111'
-  const textSecondary = dark ? '#a8a8a8' : '#606060'
   const [labItems, setLabItems] = useState([])
 
   useEffect(() => {
@@ -366,23 +363,7 @@ export default function Overview({ onNavigate }) {
 
   return (
     <div style={{ maxWidth: 760, margin: '0 auto' }}>
-      {/* Intro */}
-      <div style={{ padding: '0 4px 24px' }}>
-        <h2 style={{
-          fontFamily: ff, fontSize: 26, fontWeight: 800,
-          letterSpacing: '-0.6px', color: textPrimary,
-          margin: 0, lineHeight: 1, transition: 'color 0.3s',
-        }}>
-          Explorá el sitio
-        </h2>
-        <p style={{
-          fontFamily: ff, fontSize: 14,
-          color: textSecondary, margin: '6px 0 0',
-          lineHeight: 1.5, transition: 'color 0.3s',
-        }}>
-          Cuatro secciones para conocer mi trabajo, ideas y proceso.
-        </p>
-      </div>
+      <SectionHeader title="Explorá el sitio" desc="Cuatro secciones para conocer mi trabajo, ideas y proceso." />
 
       {/* Bento grid con jerarquía */}
       <div className="overview-grid">

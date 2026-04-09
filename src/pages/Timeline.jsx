@@ -300,7 +300,7 @@ export default function Timeline() {
 
   return (
     <>
-      <div className="reveal" style={{ width: '100%', maxWidth: 680, margin: '0 auto', padding: '8px 0 40px' }}>
+      <div className="reveal" style={{ width: '100%', maxWidth: 760, margin: '0 auto', padding: '8px 0 40px' }}>
         <SectionHeader title="Timeline" desc="Evolución de mi trabajo a través del tiempo." />
         <div style={{ position: 'relative' }}>
 

@@ -185,7 +185,7 @@ export default function Articles() {
   const [featured, ...rest] = filtered
 
   return (
-    <div style={{ maxWidth: 860, margin: '0 auto' }}>
+    <div style={{ maxWidth: 760, margin: '0 auto' }}>
       <SectionHeader title="Articles" desc="Notas sobre diseño, proceso y criterio." />
       <FilterBar tags={tags} active={activeTag} onChange={setActiveTag} />
       <div className="articles-grid" style={{ display: 'grid', gap: 12 }}>

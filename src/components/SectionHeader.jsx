@@ -8,7 +8,7 @@ export default function SectionHeader({ title, desc }) {
   const textSecondary = dark ? '#a8a8a8' : '#606060'
 
   return (
-    <div style={{ padding: '0 4px 24px' }}>
+    <div style={{ padding: '20px 4px 32px' }}>
       <h2 style={{
         fontFamily: ff,
         fontSize: 26,
