@@ -6,124 +6,91 @@ import { fetchCollection } from '../lib/cms'
 import SectionHeader from '../components/SectionHeader'
 
 const ff = 'Figtree, sans-serif'
-const THUMB_RATIO = '4 / 3' // aspect ratio compartido entre cards normales y featured
 
 function useTokens() {
   const { dark } = useTheme()
   return {
-    cardBg: dark ? '#1E1724' : '#F8F9FF',
+    cardBg: dark ? '#1E1724' : '#F0F0F8',
     textPrimary: dark ? '#e8e8e8' : '#111111',
     textMuted: dark ? '#9a9a9a' : '#5a5a5a',
     tagBg: dark ? 'rgba(255,255,255,0.1)' : '#e8e8e8',
     tagColor: dark ? '#a8a8a8' : '#555555',
-    border: dark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)',
+    divider: dark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.07)',
   }
 }
 
-function Tag({ label }) {
-  const { tagBg, tagColor } = useTokens()
-  return (
-    <span style={{ fontFamily: ff, fontSize: 10, fontWeight: 600, letterSpacing: '0.07em', textTransform: 'uppercase', color: tagColor, background: tagBg, borderRadius: 5, padding: '3px 7px', display: 'inline-block', alignSelf: 'flex-start', transition: 'background 0.3s, color 0.3s' }}>
-      {label}
-    </span>
-  )
-}
-
-function useIsMobile() {
-  const [isMobile, setIsMobile] = useState(() => window.innerWidth <= 480)
-  useEffect(() => {
-    const mq = window.matchMedia('(max-width: 480px)')
-    const handler = e => setIsMobile(e.matches)
-    mq.addEventListener('change', handler)
-    return () => mq.removeEventListener('change', handler)
-  }, [])
-  return isMobile
-}
-
-function FeaturedCard({ article, index }) {
-  const { cardBg, textPrimary, textMuted, border } = useTokens()
+function GridCard({ article, index }) {
   const [hovered, setHovered] = useState(false)
   const navigate = useNavigate()
-  const isMobile = useIsMobile()
 
-  return (
-    <div
-      className="reveal articles-featured"
-      style={{
-        animationDelay: `${index * 0.12}s`,
-        background: cardBg,
-        borderRadius: 14,
-        overflow: 'hidden',
-        cursor: 'pointer',
-        transition: 'box-shadow 0.2s ease, background 0.3s ease',
-        boxShadow: hovered ? `0 0 0 2px #7002FF, inset 0 0 0 1px ${border}` : `inset 0 0 0 1px ${border}`,
-        display: 'flex',
-        flexDirection: isMobile ? 'column' : 'row',
-      }}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      onClick={() => navigate(`/articles/${article.slug}`)}
-      role="button"
-      tabIndex={0}
-    >
-      {/* Thumbnail con mismo aspect ratio */}
-      <div style={{ position: 'relative', background: article.cover?.startsWith('http') ? `url(${article.cover}) center/cover no-repeat` : (article.cover || 'linear-gradient(135deg, #1a1a1a 0%, #3a3a3a 100%)'), aspectRatio: THUMB_RATIO, flexShrink: 0, width: isMobile ? '100%' : '45%', overflow: 'hidden', borderRadius: isMobile ? '14px 14px 0 0' : '14px 0 0 14px' }}>
-        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(255,255,255,0.18) 0%, transparent 55%)', opacity: hovered ? 1 : 0, transition: 'opacity 0.35s ease', pointerEvents: 'none' }} />
-      </div>
-
-      {/* Content */}
-      <div style={{ padding: '24px 28px', display: 'flex', flexDirection: 'column', gap: 12, justifyContent: 'center' }}>
-        <Tag label={article.tag} />
-        <p style={{ fontFamily: ff, fontSize: 22, fontWeight: 600, letterSpacing: '-0.5px', lineHeight: 1.3, color: textPrimary, transition: 'color 0.3s', margin: 0 }}>
-          {article.title}
-        </p>
-        <p style={{ fontFamily: ff, fontSize: 11, color: textMuted, transition: 'color 0.3s', margin: 0 }}>
-          {article.date} · {article.readingTime}
-        </p>
-      </div>
-    </div>
-  )
-}
-
-function ArticleCard({ article, index }) {
-  const { cardBg, textPrimary, textMuted, border } = useTokens()
-  const [hovered, setHovered] = useState(false)
-  const navigate = useNavigate()
+  const isImage = article.cover && !article.cover.startsWith('linear-gradient') && !article.cover.startsWith('radial-gradient')
 
   return (
     <div
       className="reveal"
-      style={{
-        animationDelay: `${index * 0.12}s`,
-        background: cardBg,
-        borderRadius: 14,
-        overflow: 'hidden',
-        cursor: 'pointer',
-        transition: 'box-shadow 0.2s ease, background 0.3s ease',
-        boxShadow: hovered ? `0 0 0 2px #7002FF, inset 0 0 0 1px ${border}` : `inset 0 0 0 1px ${border}`,
-        display: 'flex',
-        flexDirection: 'column',
-      }}
+      onClick={() => navigate(`/articles/${article.slug}`)}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      onClick={() => navigate(`/articles/${article.slug}`)}
+      onKeyDown={e => e.key === 'Enter' && navigate(`/articles/${article.slug}`)}
       role="button"
       tabIndex={0}
+      style={{
+        animationDelay: `${index * 0.07}s`,
+        position: 'relative',
+        borderRadius: 14,
+        overflow: 'hidden',
+        aspectRatio: '3/4',
+        cursor: 'pointer',
+        boxShadow: hovered ? '0 0 0 2px #7002FF' : '0 0 0 0px transparent',
+        transition: 'box-shadow 0.2s',
+        background: isImage
+          ? `url(${article.cover}) center/cover no-repeat`
+          : (article.cover || 'linear-gradient(135deg, #1a1a1a, #3a3a3a)'),
+      }}
     >
-      {/* Thumbnail con mismo aspect ratio */}
-      <div style={{ position: 'relative', background: article.cover?.startsWith('http') ? `url(${article.cover}) center/cover no-repeat` : (article.cover || 'linear-gradient(135deg, #1a1a1a 0%, #3a3a3a 100%)'), aspectRatio: THUMB_RATIO, width: '100%', overflow: 'hidden', borderRadius: '14px 14px 0 0' }}>
-        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(255,255,255,0.18) 0%, transparent 55%)', opacity: hovered ? 1 : 0, transition: 'opacity 0.35s ease', pointerEvents: 'none' }} />
-      </div>
+      {/* overlay gradient bottom */}
+      <div style={{
+        position: 'absolute', inset: 0,
+        background: 'linear-gradient(to top, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.3) 50%, transparent 100%)',
+        transition: 'opacity 0.2s',
+        opacity: hovered ? 0.9 : 1,
+      }} />
 
-      {/* Content */}
-      <div style={{ padding: '16px 18px 18px', display: 'flex', flexDirection: 'column', gap: 10, flex: 1 }}>
-        <Tag label={article.tag} />
-        <p style={{ fontFamily: ff, fontSize: 16, fontWeight: 500, letterSpacing: '-0.25px', lineHeight: 1.4, color: textPrimary, transition: 'color 0.3s', margin: 0 }}>
+      {/* shine on hover */}
+      {hovered && (
+        <div style={{
+          position: 'absolute', inset: 0,
+          background: 'linear-gradient(135deg, rgba(255,255,255,0.07) 0%, transparent 60%)',
+        }} />
+      )}
+
+      {/* Text */}
+      <div style={{
+        position: 'absolute', bottom: 0, left: 0, right: 0,
+        padding: '16px 14px',
+        display: 'flex', flexDirection: 'column', gap: 6,
+      }}>
+        <span style={{
+          fontFamily: ff, fontSize: 9, fontWeight: 700,
+          textTransform: 'uppercase', letterSpacing: '0.08em',
+          color: 'rgba(255,255,255,0.55)',
+        }}>
+          {article.tag}
+        </span>
+        <span style={{
+          fontFamily: ff, fontSize: 16, fontWeight: 600,
+          color: '#fff', lineHeight: 1.3, letterSpacing: '-0.2px',
+          display: '-webkit-box', WebkitLineClamp: 3,
+          WebkitBoxOrient: 'vertical', overflow: 'hidden',
+        }}>
           {article.title}
-        </p>
-        <p style={{ fontFamily: ff, fontSize: 11, color: textMuted, transition: 'color 0.3s', margin: 0, marginTop: 'auto' }}>
+        </span>
+        <span style={{
+          fontFamily: ff, fontSize: 10,
+          color: 'rgba(255,255,255,0.45)',
+        }}>
           {article.date} · {article.readingTime}
-        </p>
+        </span>
       </div>
     </div>
   )
@@ -132,15 +99,19 @@ function ArticleCard({ article, index }) {
 function FilterBar({ tags, active, onChange }) {
   const { dark } = useTheme()
   const { tagBg, tagColor } = useTokens()
+  const [hovered, setHovered] = useState(null)
 
   return (
     <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 16 }}>
       {['Todos', ...tags].map(tag => {
         const isActive = tag === active
+        const isHovered = hovered === tag && !isActive
         return (
           <button
             key={tag}
             onClick={() => onChange(tag)}
+            onMouseEnter={() => setHovered(tag)}
+            onMouseLeave={() => setHovered(null)}
             style={{
               fontFamily: ff,
               fontSize: 11,
@@ -148,7 +119,11 @@ function FilterBar({ tags, active, onChange }) {
               letterSpacing: '0.06em',
               textTransform: 'uppercase',
               color: isActive ? (dark ? '#e8e8e8' : '#111111') : tagColor,
-              background: isActive ? (dark ? 'rgba(255,255,255,0.18)' : 'rgba(0,0,0,0.14)') : tagBg,
+              background: isActive
+                ? (dark ? 'rgba(255,255,255,0.18)' : 'rgba(0,0,0,0.14)')
+                : isHovered
+                  ? (dark ? 'rgba(255,255,255,0.14)' : 'rgba(0,0,0,0.10)')
+                  : tagBg,
               border: 'none',
               borderRadius: 6,
               padding: '5px 10px',
@@ -165,8 +140,68 @@ function FilterBar({ tags, active, onChange }) {
   )
 }
 
+function SearchBar({ value, onChange }) {
+  const { dark } = useTheme()
+  const { textPrimary, textMuted } = useTokens()
+  const [focused, setFocused] = useState(false)
+
+  return (
+    <div style={{
+      position: 'relative',
+      marginBottom: 12,
+    }}>
+      <input
+        type="text"
+        placeholder="Buscar artículos..."
+        value={value}
+        onChange={e => onChange(e.target.value)}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
+        style={{
+          width: '100%',
+          fontFamily: ff,
+          fontSize: 14,
+          color: textPrimary,
+          background: dark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.04)',
+          border: 'none',
+          outline: focused ? '2px solid #7002FF' : '2px solid transparent',
+          borderRadius: 10,
+          padding: '10px 14px 10px 38px',
+          boxSizing: 'border-box',
+          transition: 'outline 0.2s, background 0.2s',
+        }}
+      />
+      <svg
+        width="14" height="14" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
+        style={{
+          position: 'absolute', left: 13, top: '50%', transform: 'translateY(-50%)',
+          color: textMuted, pointerEvents: 'none',
+        }}
+      >
+        <circle cx="11" cy="11" r="8" />
+        <line x1="21" y1="21" x2="16.65" y2="16.65" />
+      </svg>
+      {value && (
+        <button
+          onClick={() => onChange('')}
+          style={{
+            position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)',
+            background: 'none', border: 'none', cursor: 'pointer',
+            color: textMuted, padding: 2, lineHeight: 1,
+            fontSize: 16,
+          }}
+        >
+          ×
+        </button>
+      )}
+    </div>
+  )
+}
+
 export default function Articles() {
   const [activeTag, setActiveTag] = useState('Todos')
+  const [query, setQuery] = useState('')
   const [articles, setArticles] = useState(fallbackArticles)
 
   useEffect(() => {
@@ -177,22 +212,28 @@ export default function Articles() {
 
   const tags = useMemo(() => [...new Set(articles.map(a => a.tag))], [articles])
 
-  const filtered = useMemo(() =>
-    activeTag === 'Todos' ? articles : articles.filter(a => a.tag === activeTag),
-    [activeTag, articles]
-  )
-
-  const [featured, ...rest] = filtered
+  const filtered = useMemo(() => {
+    let result = activeTag === 'Todos' ? articles : articles.filter(a => a.tag === activeTag)
+    if (query.trim()) {
+      const q = query.toLowerCase()
+      result = result.filter(a => a.title.toLowerCase().includes(q))
+    }
+    return result
+  }, [activeTag, query, articles])
 
   return (
     <div style={{ maxWidth: 760, margin: '0 auto' }}>
       <SectionHeader title="Articles" desc="Notas sobre diseño, proceso y criterio." />
+      <SearchBar value={query} onChange={setQuery} />
       <FilterBar tags={tags} active={activeTag} onChange={setActiveTag} />
-      <div className="articles-grid" style={{ display: 'grid', gap: 12 }}>
-        {featured && <FeaturedCard article={featured} index={0} />}
-        {rest.map((a, i) => (
-          <ArticleCard key={a.slug} article={a} index={i + 1} />
-        ))}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
+        {filtered.length > 0 ? filtered.map((a, i) => (
+          <GridCard key={a.slug} article={a} index={i} />
+        )) : (
+          <p style={{ fontFamily: ff, fontSize: 13, color: 'rgba(128,128,128,0.6)', textAlign: 'center', padding: '32px 0', margin: 0 }}>
+            No hay artículos que coincidan.
+          </p>
+        )}
       </div>
     </div>
   )

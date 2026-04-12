@@ -1,13 +1,12 @@
 import { useState, useRef, useEffect } from 'react'
-import { House, BookOpen, Briefcase, FlaskConical, Clock } from 'lucide-react'
+import { House, BookOpen, FlaskConical, User } from 'lucide-react'
 import { useTheme } from '../context/ThemeContext'
 
 const TABS = [
   { label: 'Home', Icon: House },
   { label: 'Articles', Icon: BookOpen },
-  { label: 'Portfolio', Icon: Briefcase },
   { label: 'Lab', Icon: FlaskConical },
-  { label: 'Timeline', Icon: Clock },
+  { label: 'About', Icon: User },
 ]
 
 export default function Tabs({ children, active: propActive, onTabChange }) {

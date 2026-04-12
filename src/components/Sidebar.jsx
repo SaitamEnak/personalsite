@@ -9,7 +9,6 @@ const links = [
   { label: 'LinkedIn', href: 'https://www.linkedin.com/in/mcanepadcv' },
   { label: 'Dribbble', href: 'https://dribbble.com/Kanematias' },
   { label: 'Behance', href: 'https://www.behance.net/MatiasCanepa' },
-  { label: 'Email', href: 'mailto:matiascanepadcv@gmail.com' },
 ]
 
 const ff = 'Figtree, sans-serif'
@@ -232,8 +231,8 @@ export default function Sidebar() {
         <div className="reveal" style={{ animationDelay: '0.05s', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
           <div
             style={{
-              width: 90,
-              height: 90,
+              width: 56,
+              height: 56,
               borderRadius: '50%',
               background: dark ? '#333' : '#d9d9d9',
               overflow: 'hidden',
@@ -243,14 +242,15 @@ export default function Sidebar() {
             <img
               src={`${import.meta.env.BASE_URL}avatar.png`}
               alt="Matias Cánepa"
-              style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+              style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', cursor: 'pointer' }}
               onError={(e) => { e.target.style.display = 'none' }}
+              onClick={() => window.open('https://www.youtube.com/watch?v=dQw4w9WgXcQ', '_blank')}
             />
           </div>
         </div>
 
         {/* Name & Title */}
-        <div className="reveal" style={{ animationDelay: '0.15s', display: 'flex', flexDirection: 'column', lineHeight: 'normal', paddingTop: 16 }}>
+        <div className="reveal" style={{ animationDelay: '0.15s', display: 'flex', flexDirection: 'column', lineHeight: 'normal' }}>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: 0 }}>
             <span
               style={{
@@ -340,16 +340,15 @@ export default function Sidebar() {
             animationDelay: '0.25s',
             fontFamily: ff,
             fontWeight: 400,
-            fontSize: 15,
+            fontSize: 16,
             letterSpacing: '-0.3px',
             lineHeight: 1.5,
             color: textSecondary,
             transition: 'color 0.3s ease',
           }}
         >
-          Product Designer. Trabajo en la intersección entre sistemas, interfaces
-          y comportamiento humano. Con interés creciente en cómo la IA transforma
-          la práctica del diseño.
+
+          La IA me dio el poder de construir las cosas que antes solo podía imaginar. Algo emocionante, un poco preocupante, y completamente inevitable. Aún estoy descubriendo si eso es bueno o malo. Pero acá estoy
         </p>
 
         <Polaroid visible={polaroidVisible} onClose={() => setPolaroidVisible(false)} />
