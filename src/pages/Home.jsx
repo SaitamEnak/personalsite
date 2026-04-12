@@ -72,49 +72,71 @@ function Section({ title, subtitle, tabIndex, onNavigate, children }) {
 
 // ─── Articles preview ─────────────────────────────────────────────────────────
 
-function ArticleRow({ article }) {
-  const { cardBg, textPrimary, textMuted, tagColor } = useTokens()
-  const navigate = useNavigate()
+function ArticleGridCard({ article, index }) {
   const [hovered, setHovered] = useState(false)
+  const navigate = useNavigate()
+
+  const isImage = article.cover && !article.cover.startsWith('linear-gradient') && !article.cover.startsWith('radial-gradient')
 
   return (
     <div
+      className="reveal"
       onClick={() => navigate(`/articles/${article.slug}`)}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
+      onKeyDown={e => e.key === 'Enter' && navigate(`/articles/${article.slug}`)}
       role="button"
       tabIndex={0}
-      onKeyDown={e => e.key === 'Enter' && navigate(`/articles/${article.slug}`)}
       style={{
-        display: 'flex', gap: 16, alignItems: 'center',
-        padding: '12px 14px', borderRadius: 12,
-        background: hovered ? cardBg : 'transparent',
+        animationDelay: `${index * 0.07}s`,
+        position: 'relative',
+        borderRadius: 14,
+        overflow: 'hidden',
+        aspectRatio: '3/4',
+        cursor: 'pointer',
         boxShadow: hovered ? '0 0 0 2px #7002FF' : '0 0 0 0px transparent',
-        cursor: 'pointer', transition: 'background 0.2s, box-shadow 0.2s',
-        marginLeft: -14, marginRight: -14,
+        transition: 'box-shadow 0.2s',
+        background: isImage
+          ? `url(${article.cover}) center/cover no-repeat`
+          : (article.cover || 'linear-gradient(135deg, #1a1a1a, #3a3a3a)'),
       }}
     >
       <div style={{
-        width: 80, aspectRatio: '4/3', borderRadius: 10, flexShrink: 0,
-        background: article.cover && !article.cover.startsWith('linear-gradient') && !article.cover.startsWith('radial-gradient')
-          ? `url(${article.cover}) center/cover no-repeat`
-          : (article.cover || 'linear-gradient(135deg, #1a1a1a, #3a3a3a)'),
+        position: 'absolute', inset: 0,
+        background: 'linear-gradient(to top, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.3) 50%, transparent 100%)',
+        transition: 'opacity 0.2s',
+        opacity: hovered ? 0.9 : 1,
       }} />
-      <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 3 }}>
+      {hovered && (
+        <div style={{
+          position: 'absolute', inset: 0,
+          background: 'linear-gradient(135deg, rgba(255,255,255,0.07) 0%, transparent 60%)',
+        }} />
+      )}
+      <div style={{
+        position: 'absolute', bottom: 0, left: 0, right: 0,
+        padding: '16px 14px',
+        display: 'flex', flexDirection: 'column', gap: 6,
+      }}>
         <span style={{
-          fontFamily: ff, fontSize: 10, fontWeight: 600,
-          textTransform: 'uppercase', letterSpacing: '0.07em', color: tagColor,
+          fontFamily: ff, fontSize: 9, fontWeight: 700,
+          textTransform: 'uppercase', letterSpacing: '0.08em',
+          color: 'rgba(255,255,255,0.55)',
         }}>
           {article.tag}
         </span>
         <span style={{
-          fontFamily: ff, fontSize: 15, fontWeight: 500,
-          color: textPrimary, lineHeight: 1.35, letterSpacing: '-0.2px',
-          whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+          fontFamily: ff, fontSize: 16, fontWeight: 600,
+          color: '#fff', lineHeight: 1.3, letterSpacing: '-0.2px',
+          display: '-webkit-box', WebkitLineClamp: 3,
+          WebkitBoxOrient: 'vertical', overflow: 'hidden',
         }}>
           {article.title}
         </span>
-        <span style={{ fontFamily: ff, fontSize: 11, color: textMuted }}>
+        <span style={{
+          fontFamily: ff, fontSize: 10,
+          color: 'rgba(255,255,255,0.45)',
+        }}>
           {article.date} · {article.readingTime}
         </span>
       </div>
@@ -122,44 +144,68 @@ function ArticleRow({ article }) {
   )
 }
 
-// ─── Portfolio preview — 3-col gradient cards ─────────────────────────────────
+// ─── Portfolio preview — horizontal cards ────────────────────────────────────
 
 function PortfolioCard({ project }) {
+  const { cardBg, textPrimary, textMuted } = useTokens()
   const [hovered, setHovered] = useState(false)
 
   return (
     <div
+      className="flex flex-col sm:flex-row sm:items-center"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
-        borderRadius: 14, overflow: 'hidden',
-        background: project.gradient,
-        aspectRatio: '4/3', position: 'relative',
+        gap: 14,
+        borderRadius: 14,
         boxShadow: hovered ? '0 0 0 2px #7002FF' : '0 0 0 0px transparent',
-        transition: 'box-shadow 0.2s',
+        background: hovered ? cardBg : 'transparent',
+        transition: 'box-shadow 0.2s, background 0.2s',
         cursor: 'pointer',
+        padding: 8,
       }}
     >
-      {/* bottom gradient */}
-      <div style={{
-        position: 'absolute', inset: 0,
-        background: 'linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 60%)',
-      }} />
+      {/* gradient thumb — all corners rounded */}
+      <div
+        className="w-full sm:w-[58%]"
+        style={{
+          aspectRatio: '4/3', flexShrink: 0,
+          borderRadius: 10,
+          background: project.gradient,
+          position: 'relative', overflow: 'hidden',
+        }}
+      >
+        {hovered && (
+          <div style={{ position: 'absolute', inset: 0, background: 'rgba(255,255,255,0.07)' }} />
+        )}
+      </div>
+
       {/* text */}
-      <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '12px 14px' }}>
+      <div style={{
+        flex: 1, minWidth: 0,
+        display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 4,
+        padding: '0 6px',
+      }}>
         <span style={{
-          fontFamily: ff, fontSize: 9, fontWeight: 700,
+          fontFamily: ff, fontSize: 11, fontWeight: 700,
           textTransform: 'uppercase', letterSpacing: '0.08em',
-          color: project.accent, display: 'block', marginBottom: 4,
+          color: project.accent,
         }}>
           {project.tag}
         </span>
         <span style={{
-          fontFamily: ff, fontSize: 13, fontWeight: 700,
-          color: '#fff', letterSpacing: '-0.2px', lineHeight: 1.25, display: 'block',
+          fontFamily: ff, fontSize: 20, fontWeight: 600,
+          color: textPrimary, letterSpacing: '-0.3px', lineHeight: 1.25,
         }}>
           {project.title}
         </span>
+        {project.desc && (
+          <span style={{
+            fontFamily: ff, fontSize: 14, color: textMuted, lineHeight: 1.5,
+          }}>
+            {project.desc}
+          </span>
+        )}
       </div>
     </div>
   )
@@ -237,13 +283,13 @@ function HomeContent({ onNavigate }) {
       {/* Articles */}
       <Section
         title="Artículos"
-        subtitle="Reflexiones sobre diseño, producto e IA"
+        subtitle="Guías, recursos y reflexiones sobre diseño, producto e IA"
         tabIndex={1}
         onNavigate={onNavigate}
       >
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
-          {previewArticles.map(a => (
-            <ArticleRow key={a.slug} article={a} />
+        <div className="grid grid-cols-1 sm:grid-cols-3" style={{ gap: 12 }}>
+          {previewArticles.map((a, i) => (
+            <ArticleGridCard key={a.slug} article={a} index={i} />
           ))}
         </div>
       </Section>
@@ -253,7 +299,7 @@ function HomeContent({ onNavigate }) {
         title="Portfolio"
         subtitle="Proyectos de diseño de producto y sistemas"
       >
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
           {previewProjects.map(p => (
             <PortfolioCard key={p.title} project={p} />
           ))}
