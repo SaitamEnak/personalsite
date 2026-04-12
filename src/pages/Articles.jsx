@@ -226,7 +226,7 @@ export default function Articles() {
       <SectionHeader title="Articles" desc="Notas sobre diseño, proceso y criterio." />
       <SearchBar value={query} onChange={setQuery} />
       <FilterBar tags={tags} active={activeTag} onChange={setActiveTag} />
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
+      <div className="grid grid-cols-1 sm:grid-cols-3" style={{ gap: 12 }}>
         {filtered.length > 0 ? filtered.map((a, i) => (
           <GridCard key={a.slug} article={a} index={i} />
         )) : (
