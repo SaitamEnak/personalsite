@@ -211,13 +211,15 @@ function PortfolioCard({ project }) {
   )
 }
 
-// ─── Lab preview — asymmetric grid (1 featured + 2 stacked) ──────────────────
+// ─── Lab preview — list with 4:3 thumbnail ───────────────────────────────────
 
-function LabThumb({ item, onNavigate, style = {} }) {
+function LabListItem({ item, onNavigate }) {
+  const { cardBg, textPrimary, textMuted } = useTokens()
   const [hovered, setHovered] = useState(false)
 
   return (
     <div
+      className="flex flex-col sm:flex-row sm:items-center"
       onClick={() => onNavigate(2)}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
@@ -225,31 +227,65 @@ function LabThumb({ item, onNavigate, style = {} }) {
       tabIndex={0}
       onKeyDown={e => e.key === 'Enter' && onNavigate(2)}
       style={{
-        borderRadius: 12, overflow: 'hidden', cursor: 'pointer',
-        position: 'relative', flexShrink: 0,
-        background: item.thumb?.startsWith('http')
-          ? `url(${item.thumb}) center/cover no-repeat`
-          : (item.thumb || 'linear-gradient(140deg, #1a0533 0%, #7002FF 100%)'),
-        transition: 'box-shadow 0.2s',
-        boxShadow: hovered ? '0 0 0 2px #7002FF' : 'none',
-        ...style,
+        gap: 14,
+        borderRadius: 14,
+        boxShadow: hovered ? '0 0 0 2px #7002FF' : '0 0 0 0px transparent',
+        background: hovered ? cardBg : 'transparent',
+        transition: 'box-shadow 0.2s, background 0.2s',
+        cursor: 'pointer',
+        padding: 8,
       }}
     >
+      {/* thumbnail 4:3 */}
+      <div
+        className="w-full sm:w-[22%]"
+        style={{
+          aspectRatio: '4/3', flexShrink: 0,
+          borderRadius: 10, overflow: 'hidden',
+          position: 'relative',
+          background: item.thumb?.startsWith('http')
+            ? `url(${item.thumb}) center/cover no-repeat`
+            : (item.thumb || 'linear-gradient(140deg, #1a0533 0%, #7002FF 100%)'),
+        }}
+      >
+        <div style={{
+          position: 'absolute', inset: 0,
+          background: 'linear-gradient(to top, rgba(0,0,0,0.45) 0%, transparent 55%)',
+        }} />
+        {hovered && (
+          <div style={{ position: 'absolute', inset: 0, background: 'rgba(255,255,255,0.07)' }} />
+        )}
+      </div>
+
+      {/* text */}
       <div style={{
-        position: 'absolute', inset: 0,
-        background: 'linear-gradient(to top, rgba(0,0,0,0.65) 0%, transparent 55%)',
-      }} />
-      {hovered && (
-        <div style={{ position: 'absolute', inset: 0, background: 'rgba(255,255,255,0.07)' }} />
-      )}
-      <span style={{
-        position: 'absolute', bottom: 8, left: 10,
-        fontFamily: mono, fontSize: 8, fontWeight: 600,
-        letterSpacing: '0.08em', textTransform: 'uppercase',
-        color: 'rgba(255,255,255,0.75)',
+        flex: 1, minWidth: 0,
+        display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 4,
+        padding: '0 6px',
       }}>
-        [{item.label ?? item.title}]
-      </span>
+        {item.tag && (
+          <span style={{
+            fontFamily: mono, fontSize: 9, fontWeight: 700,
+            textTransform: 'uppercase', letterSpacing: '0.08em',
+            color: '#7002FF',
+          }}>
+            {item.tag}
+          </span>
+        )}
+        <span style={{
+          fontFamily: ff, fontSize: 18, fontWeight: 600,
+          color: textPrimary, letterSpacing: '-0.3px', lineHeight: 1.25,
+        }}>
+          {item.label ?? item.title}
+        </span>
+        {item.desc && (
+          <span style={{
+            fontFamily: ff, fontSize: 13, color: textMuted, lineHeight: 1.5,
+          }}>
+            {item.desc}
+          </span>
+        )}
+      </div>
     </div>
   )
 }
@@ -306,7 +342,7 @@ function HomeContent({ onNavigate }) {
         </div>
       </Section>
 
-      {/* Lab — featured + 2 stacked */}
+      {/* Lab — list with 4:3 thumbnails */}
       <Section
         title="Lab"
         subtitle="Experimentos, prototipos y cosas raras"
@@ -314,22 +350,14 @@ function HomeContent({ onNavigate }) {
         onNavigate={onNavigate}
       >
         {previewLab.length > 0 ? (
-          <div style={{ display: 'flex', gap: 12, height: 240 }}>
-            <LabThumb
-              item={previewLab[0]}
-              onNavigate={onNavigate}
-              style={{ flex: 2, height: '100%' }}
-            />
-            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 12 }}>
-              {previewLab.slice(1, 3).map(e => (
-                <LabThumb
-                  key={e.slug ?? e.title}
-                  item={e}
-                  onNavigate={onNavigate}
-                  style={{ flex: 1 }}
-                />
-              ))}
-            </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            {previewLab.map(item => (
+              <LabListItem
+                key={item.slug ?? item.title}
+                item={item}
+                onNavigate={onNavigate}
+              />
+            ))}
           </div>
         ) : (
           <div style={{ fontFamily: mono, fontSize: 11, color: 'rgba(255,255,255,0.3)', textAlign: 'center', padding: '24px 0' }}>
