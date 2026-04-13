@@ -306,14 +306,14 @@ export default function Sidebar() {
               flexWrap: 'wrap',
             }}
           >
-            Product designer at{' '}
+            Product designer
             <span
               role="button"
               onClick={() => setPolaroidVisible(v => !v)}
               onMouseEnter={(e) => { e.currentTarget.style.background = '#3a8a5e'; e.currentTarget.style.borderColor = '#3a8a5e' }}
               onMouseLeave={(e) => { e.currentTarget.style.background = '#48A371'; e.currentTarget.style.borderColor = '#48A371' }}
               style={{
-                display: 'inline-flex',
+                display: 'none',
                 alignItems: 'center',
                 gap: 5,
                 fontWeight: 600,

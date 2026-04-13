@@ -223,7 +223,7 @@ export default function Articles() {
 
   return (
     <div style={{ maxWidth: 760, margin: '0 auto' }}>
-      <SectionHeader title="Articles" desc="Notas sobre diseño, proceso y criterio." />
+      <SectionHeader title={<>Guías, recursos y reflexiones<br />sobre diseño, producto e IA</>} />
       <SearchBar value={query} onChange={setQuery} />
       <FilterBar tags={tags} active={activeTag} onChange={setActiveTag} />
       <div className="grid grid-cols-1 sm:grid-cols-3" style={{ gap: 12 }}>

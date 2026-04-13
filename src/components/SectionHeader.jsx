@@ -8,10 +8,10 @@ export default function SectionHeader({ title, desc }) {
   const textSecondary = dark ? '#a8a8a8' : '#606060'
 
   return (
-    <div style={{ padding: '20px 4px 32px' }}>
+    <div style={{ padding: '20px 4px 32px', textAlign: 'center' }}>
       <h2 style={{
         fontFamily: ff,
-        fontSize: 26,
+        fontSize: 48,
         fontWeight: 800,
         letterSpacing: '-0.6px',
         color: textPrimary,

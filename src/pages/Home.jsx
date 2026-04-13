@@ -378,9 +378,7 @@ export default function Home() {
   return (
     <div style={{ padding: '0 0 16px 0' }}>
       <Tabs active={active} onTabChange={setActive}>
-        <HomeContent onNavigate={setActive} />
         <Articles />
-        <Lab />
         <Timeline />
       </Tabs>
     </div>
