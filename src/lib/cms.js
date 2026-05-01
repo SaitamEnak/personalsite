@@ -1,11 +1,12 @@
 const BASE_URL = import.meta.env.VITE_CMS_BASE_URL
 const API_KEY = import.meta.env.VITE_CMS_API_KEY
+const ENABLED = import.meta.env.VITE_CMS_ENABLED === 'true'
 
 const cache = {}
 
 export async function fetchCollection(collection) {
   if (cache[collection]) return cache[collection]
-  if (!BASE_URL || !API_KEY) return []
+  if (!ENABLED || !BASE_URL || !API_KEY) return []
 
   try {
     const res = await fetch(`${BASE_URL}?collection=${collection}`, {
